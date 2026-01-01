@@ -1,0 +1,94 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE } from "../config";
+
+const title = `About ${SITE.author}`;
+const description = "Software Engineer based in Tucson, AZ specializing in Kotlin, Java, Python, and Cloud Technologies.";
+---
+
+<Layout title={title} description={description}>
+  <section class="mx-auto max-w-3xl px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">About Me</h1>
+    
+    <div class="prose prose-lg dark:prose-invert">
+      <p class="lead text-xl mb-6">
+        Software Engineer based in <strong>Tucson, AZ</strong> with expertise in Backend & Cloud technologies. 
+        Passionate about building scalable microservices and optimizing complex systems.
+      </p>
+
+      <div class="flex flex-wrap gap-4 mb-8">
+        <a href="https://linkedin.com/in/parthjpatel99" class="no-underline px-4 py-2 bg-[#0077b5] text-white rounded hover:opacity-90 transition-opacity">LinkedIn</a>
+        <a href="https://github.com/parthjpatel99" class="no-underline px-4 py-2 bg-[#333] text-white rounded hover:opacity-90 transition-opacity">GitHub</a>
+        <a href="mailto:parth8199@gmail.com" class="no-underline px-4 py-2 bg-accent text-white rounded hover:opacity-90 transition-opacity">Email</a>
+      </div>
+
+      <hr class="my-8"/>
+
+      <h2>Experience</h2>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold">Komatsu</h3>
+        <p class="text-muted-foreground italic mb-2">Software Engineer | Tucson, AZ | February 2023 – Present</p>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>Safeguarded mission-critical mining operations valued at $100k+/hour by engineering a low-latency <strong>Kotlin microservice</strong> that synchronizes 500+ autonomous trucks, simultaneously cutting external integration time by 50%.</li>
+          <li>Achieved sub-second UI latency (previously multi-second) for the Fleet Management System by decoupling the C# adapter from the monolithic core, architecting a non-blocking asynchronous communication pattern for high-volume telemetry.</li>
+          <li>Slashed developer onboarding time by 75% (1 month to 1 week) by resurrecting a dormant API project, reverse-engineering legacy code, and establishing a robust <strong>Azure CI/CD pipeline</strong> that unblocked cross-team feature delivery.</li>
+          <li>Accelerated deployment velocity by 60% by architecting a zero-error Docker-based release pipeline with Bash automation, eliminating manual configuration drift for non-technical users.</li>
+          <li>Optimized geospatial rendering speed by 20% by integrating <strong>GeoServer with PostGIS</strong> and restructuring Hibernate/JPA queries to efficiently serve complex map object layers.</li>
+          <li>Centralized API security for 100+ daily internal requests by implementing an OAuth2/Keycloak gateway, reducing configuration overhead by 35% while enforcing strict access control policies.</li>
+        </ul>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold">Evernote</h3>
+        <p class="text-muted-foreground italic mb-2">Software Engineer Intern | Remote, NY | June 2022 – August 2022</p>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>Shipped the "Repeat After Completion" feature to 50,000+ beta users by architecting complex temporal state management logic in <strong>TypeScript/GraphQL</strong> to handle dynamic recurring intervals across timezones.</li>
+          <li>Deployed a reusable task-filtering component to 200M+ users across Web, Mobile, and Desktop clients, strictly adhering to Figma design specs to ensure uniform UX at global scale.</li>
+          <li>Enhanced iOS touch responsiveness for millions of users by refactoring the date-picker state management logic, resolving main-thread blocking issues during high-frequency interactions.</li>
+        </ul>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-xl font-bold">ISRO – Space Applications Center</h3>
+        <p class="text-muted-foreground italic mb-2">Research Intern | Ahmedabad, India | December 2020 – April 2021</p>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>Achieved 92% detection accuracy for oceanic eddies by engineering a <strong>Python deep learning pipeline</strong> (Mask R-CNN, YOLO), utilizing batch processing to analyze terabytes of satellite imagery without memory overflow.</li>
+          <li>Converted vague research requirements into precise ML specifications by transforming NetCDF data into Matplotlib visualizations, enabling the model to successfully classify cyclic vs. acyclic water patterns.</li>
+        </ul>
+      </div>
+
+      <hr class="my-8"/>
+
+      <h2>Skills</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-bold mb-2">Languages</h3>
+          <p>Kotlin, Java, Python, C#, TypeScript, C++, SQL, Bash</p>
+        </div>
+        <div>
+          <h3 class="font-bold mb-2">Backend & Cloud</h3>
+          <p>Spring Boot, Node.js, Microservices, RESTful APIs, Docker, Kubernetes, Azure, GCP</p>
+        </div>
+        <div>
+          <h3 class="font-bold mb-2">DevOps & Tools</h3>
+          <p>CI/CD Pipelines (GitHub Actions, Azure DevOps), Git, Maven, Gradle, Nginx</p>
+        </div>
+        <div>
+          <h3 class="font-bold mb-2">Data & Security</h3>
+          <p>PostgreSQL, PostGIS, GeoServer, OAuth2, Keycloak, JWT, SAML2, Spring Security</p>
+        </div>
+      </div>
+
+      <hr class="my-8"/>
+
+      <h2>Education</h2>
+      <div>
+        <h3 class="text-xl font-bold">Stony Brook University</h3>
+        <p>Stony Brook, NY | Master of Science in Computer Engineering | December 2022</p>
+        <p class="mt-2 text-sm text-muted-foreground"><strong>Certifications:</strong> CodePath Professional Android Development (2022)</p>
+      </div>
+
+    </div>
+  </section>
+</Layout>
