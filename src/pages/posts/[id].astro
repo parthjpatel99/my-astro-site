@@ -1,9 +1,10 @@
 ---
 import { getCollection, render } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
+import PostDetails from "../../layouts/PostDetails.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
   return posts.map((post) => ({
     params: { id: post.id },
     props: { post },
@@ -12,14 +13,11 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+const posts = await getCollection("blog");
+const sortedPosts = getSortedPosts(posts);
 ---
 
-<Layout title={post.data.title} description={post.data.description}>
-  <article class="max-w-3xl mx-auto px-4 py-12 prose dark:prose-invert">
-    <h1 class="font-bold text-4xl mb-4">{post.data.title}</h1>
-    <div class="text-muted-foreground mb-8">
-      {post.data.pubDatetime.toLocaleDateString()}
-    </div>
-    <Content />
-  </article>
-</Layout>
+<PostDetails post={post} posts={sortedPosts}>
+  <Content />
+</PostDetails>

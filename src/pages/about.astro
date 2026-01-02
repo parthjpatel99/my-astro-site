@@ -7,88 +7,103 @@ const description = "Software Engineer based in Tucson, AZ specializing in Kotli
 ---
 
 <Layout title={title} description={description}>
-  <section class="mx-auto max-w-3xl px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">About Me</h1>
+  <section class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">About</h1>
     
-    <div class="prose prose-lg dark:prose-invert">
-      <p class="lead text-xl mb-6">
-        Software Engineer based in <strong>Tucson, AZ</strong> with expertise in Backend & Cloud technologies. 
-        Passionate about building scalable microservices and optimizing complex systems.
-      </p>
-
-      <div class="flex flex-wrap gap-4 mb-8">
-        <a href="https://linkedin.com/in/parthjpatel99" class="no-underline px-4 py-2 bg-[#0077b5] text-white rounded hover:opacity-90 transition-opacity">LinkedIn</a>
-        <a href="https://github.com/parthjpatel99" class="no-underline px-4 py-2 bg-[#333] text-white rounded hover:opacity-90 transition-opacity">GitHub</a>
-        <a href="mailto:parth8199@gmail.com" class="no-underline px-4 py-2 bg-accent text-white rounded hover:opacity-90 transition-opacity">Email</a>
+    <div class="flex flex-col md:flex-row gap-8 items-start">
+      <!-- Image Section -->
+      <div class="w-full md:w-1/3 flex-shrink-0">
+        <img 
+          src="/about-portrait.jpg" 
+          alt={SITE.author} 
+          class="w-full rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-[1.02]"
+        />
       </div>
 
-      <hr class="my-8"/>
+      <!-- Content Section -->
+      <div class="flex-1 prose dark:prose-invert max-w-none">
+        <p class="lead text-lg mb-6">
+          Deep in vibe-coding mode – tinkering with shiny web tech, chasing fresh ideas.
+        </p>
+        
+        <p class="mb-6">
+          After years shipping native iOS, modern web feels like a breath of fresh air.
+        </p>
 
-      <h2>Experience</h2>
+        <p class="mb-6">
+          I split my time between <strong>Tucson, AZ</strong> and the digital realm.
+        </p>
+        
+        <p class="mb-8">
+          I’m looking for new opportunities to share my learnings at conferences.
+        </p>
 
-      <div class="mb-8">
-        <h3 class="text-xl font-bold">Komatsu</h3>
-        <p class="text-muted-foreground italic mb-2">Software Engineer | Tucson, AZ | February 2023 – Present</p>
-        <ul class="list-disc pl-5 space-y-2">
-          <li>Safeguarded mission-critical mining operations valued at $100k+/hour by engineering a low-latency <strong>Kotlin microservice</strong> that synchronizes 500+ autonomous trucks, simultaneously cutting external integration time by 50%.</li>
-          <li>Achieved sub-second UI latency (previously multi-second) for the Fleet Management System by decoupling the C# adapter from the monolithic core, architecting a non-blocking asynchronous communication pattern for high-volume telemetry.</li>
-          <li>Slashed developer onboarding time by 75% (1 month to 1 week) by resurrecting a dormant API project, reverse-engineering legacy code, and establishing a robust <strong>Azure CI/CD pipeline</strong> that unblocked cross-team feature delivery.</li>
-          <li>Accelerated deployment velocity by 60% by architecting a zero-error Docker-based release pipeline with Bash automation, eliminating manual configuration drift for non-technical users.</li>
-          <li>Optimized geospatial rendering speed by 20% by integrating <strong>GeoServer with PostGIS</strong> and restructuring Hibernate/JPA queries to efficiently serve complex map object layers.</li>
-          <li>Centralized API security for 100+ daily internal requests by implementing an OAuth2/Keycloak gateway, reducing configuration overhead by 35% while enforcing strict access control policies.</li>
-        </ul>
+        <a href="#experience" class="no-underline border-b-2 border-dashed border-accent hover:border-solid transition-all">
+          Check out my experience & skills below.
+        </a>
       </div>
-
-      <div class="mb-8">
-        <h3 class="text-xl font-bold">Evernote</h3>
-        <p class="text-muted-foreground italic mb-2">Software Engineer Intern | Remote, NY | June 2022 – August 2022</p>
-        <ul class="list-disc pl-5 space-y-2">
-          <li>Shipped the "Repeat After Completion" feature to 50,000+ beta users by architecting complex temporal state management logic in <strong>TypeScript/GraphQL</strong> to handle dynamic recurring intervals across timezones.</li>
-          <li>Deployed a reusable task-filtering component to 200M+ users across Web, Mobile, and Desktop clients, strictly adhering to Figma design specs to ensure uniform UX at global scale.</li>
-          <li>Enhanced iOS touch responsiveness for millions of users by refactoring the date-picker state management logic, resolving main-thread blocking issues during high-frequency interactions.</li>
-        </ul>
-      </div>
-
-      <div class="mb-8">
-        <h3 class="text-xl font-bold">ISRO – Space Applications Center</h3>
-        <p class="text-muted-foreground italic mb-2">Research Intern | Ahmedabad, India | December 2020 – April 2021</p>
-        <ul class="list-disc pl-5 space-y-2">
-          <li>Achieved 92% detection accuracy for oceanic eddies by engineering a <strong>Python deep learning pipeline</strong> (Mask R-CNN, YOLO), utilizing batch processing to analyze terabytes of satellite imagery without memory overflow.</li>
-          <li>Converted vague research requirements into precise ML specifications by transforming NetCDF data into Matplotlib visualizations, enabling the model to successfully classify cyclic vs. acyclic water patterns.</li>
-        </ul>
-      </div>
-
-      <hr class="my-8"/>
-
-      <h2>Skills</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h3 class="font-bold mb-2">Languages</h3>
-          <p>Kotlin, Java, Python, C#, TypeScript, C++, SQL, Bash</p>
-        </div>
-        <div>
-          <h3 class="font-bold mb-2">Backend & Cloud</h3>
-          <p>Spring Boot, Node.js, Microservices, RESTful APIs, Docker, Kubernetes, Azure, GCP</p>
-        </div>
-        <div>
-          <h3 class="font-bold mb-2">DevOps & Tools</h3>
-          <p>CI/CD Pipelines (GitHub Actions, Azure DevOps), Git, Maven, Gradle, Nginx</p>
-        </div>
-        <div>
-          <h3 class="font-bold mb-2">Data & Security</h3>
-          <p>PostgreSQL, PostGIS, GeoServer, OAuth2, Keycloak, JWT, SAML2, Spring Security</p>
-        </div>
-      </div>
-
-      <hr class="my-8"/>
-
-      <h2>Education</h2>
-      <div>
-        <h3 class="text-xl font-bold">Stony Brook University</h3>
-        <p>Stony Brook, NY | Master of Science in Computer Engineering | December 2022</p>
-        <p class="mt-2 text-sm text-muted-foreground"><strong>Certifications:</strong> CodePath Professional Android Development (2022)</p>
-      </div>
-
     </div>
+
+    <!-- GitHub Activity Section -->
+    <div class="mt-16">
+      <h2 class="text-2xl font-bold mb-6 font-mono">GitHub Activity</h2>
+      <div class="p-4 border border-skin-line rounded-lg bg-skin-card opacity-80 hover:opacity-100 transition-opacity">
+        <img 
+          src={`https://ghchart.rshah.org/${SITE.author.split(' ')[0]}jpatel99`} 
+          alt="GitHub Contribution Chart" 
+          class="w-full dark:invert"
+        />
+      </div>
+      <p class="mt-4 italic text-muted-foreground">
+        I build what excites me and release it all as open source.
+      </p>
+    </div>
+    
+    <hr class="my-12 border-skin-line" />
+
+    <!-- Experience Section (Keeping the data provided before but restyled) -->
+    <h2 id="experience" class="text-2xl font-bold mb-6 font-mono">Experience</h2>
+
+    <div class="space-y-12">
+      <div>
+        <div class="flex flex-col sm:flex-row justify-between items-baseline mb-2">
+          <h3 class="text-xl font-bold text-accent">Komatsu</h3>
+          <span class="text-sm text-muted-foreground font-mono">Feb 2023 – Present</span>
+        </div>
+        <p class="mb-4 italic opacity-80">Software Engineer | Tucson, AZ</p>
+        <ul class="list-disc pl-5 space-y-2 opacity-90">
+          <li>Safeguarded mission-critical mining operations valued at $100k+/hour by engineering a low-latency <strong>Kotlin microservice</strong>.</li>
+          <li>Achieved sub-second UI latency for the Fleet Management System by architecting a non-blocking asynchronous communication pattern.</li>
+          <li>Slashed developer onboarding time by 75% by establishing a robust <strong>Azure CI/CD pipeline</strong>.</li>
+          <li>Accelerated deployment velocity by 60% with a zero-error Docker-based release pipeline.</li>
+        </ul>
+      </div>
+
+       <div>
+        <div class="flex flex-col sm:flex-row justify-between items-baseline mb-2">
+          <h3 class="text-xl font-bold text-accent">Evernote</h3>
+          <span class="text-sm text-muted-foreground font-mono">Jun 2022 – Aug 2022</span>
+        </div>
+        <p class="mb-4 italic opacity-80">Software Engineer Intern | Remote, NY</p>
+        <ul class="list-disc pl-5 space-y-2 opacity-90">
+          <li>Shipped the "Repeat After Completion" feature to 50,000+ beta users using <strong>TypeScript/GraphQL</strong>.</li>
+          <li>Deployed a reusable task-filtering component to 200M+ users.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-16 p-8 bg-skin-card rounded-2xl border border-skin-line text-center">
+      <h2 class="text-2xl font-bold mb-4">Stay Connected</h2>
+      <p class="mb-6">Follow me on GitHub and catch the back-story in my contributions.</p>
+      <div class="flex justify-center gap-4">
+         <a href="https://github.com/parthjpatel99" class="px-6 py-3 bg-skin-fill text-skin-base font-bold rounded-lg border border-skin-line hover:bg-skin-card-muted transition-colors">
+           GitHub
+         </a>
+         <a href="https://linkedin.com/in/parthjpatel99" class="px-6 py-3 bg-[#0077b5] text-white font-bold rounded-lg hover:opacity-90 transition-opacity">
+           LinkedIn
+         </a>
+      </div>
+    </div>
+
   </section>
 </Layout>
