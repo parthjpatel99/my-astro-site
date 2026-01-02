@@ -14,9 +14,6 @@ import AstroPWA from "@vite-pwa/astro";
 export default defineConfig({
     site: SITE.website,
     trailingSlash: "never",
-    build: {
-        format: "file",
-    },
     markdown: {
         remarkPlugins: [
             remarkToc,
