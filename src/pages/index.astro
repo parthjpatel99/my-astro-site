@@ -39,7 +39,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
         <div class="flex-1 text-center sm:text-left">
           <div class="flex items-center gap-2 justify-center sm:justify-start">
             <h1 class="my-2 inline-block text-2xl font-bold sm:my-4 sm:text-3xl">
-              Hi, I'm {SITE.author}.
+              Hi, I'm <strong>Parth Janakbhai Patel</strong>.
             </h1>
             <a
               target="_blank"
@@ -57,8 +57,9 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
             </a>
           </div>
           <p class="mb-4">
-             Software Engineer based in <strong>Tucson, AZ</strong>.<br />
-            I build scalable backend systems, cloud infrastructure, and low-latency microservices.
+            Software Engineer & Cloud Architect based in <strong>Tucson, AZ</strong>.<br />
+            I move beyond simple syntax to orchestrate resilient backend systems and low-latency microservices.<br />
+            Bridging the gap between heavy industrial operations and modern, scalable cloud infrastructure.
           </p>
           <div class="mt-4 flex flex-row items-center justify-center sm:justify-start gap-4">
              {SOCIALS.filter((social) => social.active).length > 0 && <Socials />}
