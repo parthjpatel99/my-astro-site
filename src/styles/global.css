@@ -23,6 +23,8 @@
 :root,
 html[data-theme="light"] {
   --background: #fdfdfd;
+  --bg-pattern: url('/assets/backgrounds/desert-sparse.png');
+  --bg-filter: none;
   --foreground: #282728;
   --accent: #006cac;
   --muted: #e6e6e6;
@@ -31,6 +33,7 @@ html[data-theme="light"] {
 
 html[data-theme="dark"] {
   --background: #212737;
+  --bg-filter: invert(1) hue-rotate(180deg) brightness(0.9);
   --foreground: #eaedf3;
   --accent: #ff6b01;
   --muted: #343f60bf;
@@ -44,6 +47,8 @@ html[data-theme="dark"] {
   --color-accent: var(--accent);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --image-bg-pattern: var(--bg-pattern);
+  --image-bg-filter: var(--bg-filter);
 }
 
 @layer base {
@@ -52,56 +57,86 @@ html[data-theme="dark"] {
     scrollbar-width: auto;
     scrollbar-color: var(--color-muted) transparent;
   }
-  
+
   /* View Transitions API for smooth theme switching (Safari 18+, Chrome 111+) */
   :root {
     view-transition-name: root;
   }
-  
+
   /* Apply to html element as well for better compatibility */
   html {
     view-transition-name: root;
   }
-  
+
   /* Ensure smooth transition between light and dark themes */
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 0.25s;
   }
-  
+
   /* Customize the transition style */
   ::view-transition-old(root) {
     animation: fade-out 0.25s ease-out;
   }
-  
+
   ::view-transition-new(root) {
     animation: fade-in 0.25s ease-out;
   }
-  
+
   @keyframes fade-out {
-    from { opacity: 1; }
-    to { opacity: 0; }
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
   }
-  
+
   @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
-  
+
   html {
     @apply overflow-y-scroll scroll-smooth;
   }
+
   body {
-    @apply flex min-h-svh flex-col bg-background font-mono text-foreground selection:bg-accent/75 selection:text-background;
+    @apply flex min-h-svh flex-col font-mono text-foreground selection:bg-accent/75 selection:text-background relative;
+    background-color: var(--color-background);
   }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -50;
+    background-image: var(--image-bg-pattern);
+    background-repeat: repeat;
+    background-size: 800px;
+    filter: var(--image-bg-filter);
+    pointer-events: none;
+  }
+
   a,
   button {
     @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
   }
+
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+
   section,
   footer {
     @apply mx-auto max-w-3xl px-4;
