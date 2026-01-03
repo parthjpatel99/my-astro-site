@@ -31,9 +31,9 @@ interface Site {
 
 // Site configuration
 export const SITE: Site = {
-  website: "https://parthpatel.dev/", // Example domain
+  website: "https://parthjpatel.me/",
   author: "Parth Janakbhai Patel",
-  profile: "https://parthpatel.dev/about",
+  profile: "https://parthjpatel.me/about",
   desc: "Software Engineer | Kotlin, Java, Python, C#, TypeScript, C++ | Spring Boot, Node.js, Microservices, Docker, Kubernetes, Azure, GCP",
   title: "Parth Janakbhai Patel",
   ogImage: "parth-avatar.jpg", // Needs replacement or upload

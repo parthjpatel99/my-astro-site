@@ -8,9 +8,10 @@ import IconPinterest from "@/assets/icons/IconPinterest.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconWhatsapp from "@/assets/icons/IconWhatsapp.svg";
 import { SHARE_LINKS } from "@/constants";
+import { SITE } from "@/consts";
 import LinkButton from "./LinkButton.astro";
 
-const URL = Astro.url;
+const shareURL = new URL(Astro.url.pathname, SITE.website).href;
 
 const iconMap = {
   whatsapp: IconWhatsapp,
@@ -34,7 +35,7 @@ const iconMap = {
         const IconComponent = iconMap[social.icon as keyof typeof iconMap];
         return (
           <LinkButton
-            href={`${social.href + URL}`}
+            href={`${social.href + shareURL}`}
             class="p-3 sm:p-2 hover:rotate-6"
             title={social.linkTitle}
           >
