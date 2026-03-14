@@ -34,7 +34,7 @@ export const SITE: Site = {
   website: "https://parthjpatel.me/",
   author: "Parth Janakbhai Patel",
   profile: "https://parthjpatel.me/about",
-  desc: "Software Engineer | Kotlin, Java, Python, C#, TypeScript, C++ | Spring Boot, Node.js, Microservices, Docker, Kubernetes, Azure, GCP",
+  desc: "Software Engineer | Real-time Data Systems & APIs | AI-Augmented Developer Tooling | Kotlin, Spring Boot, TypeScript",
   title: "Parth Janakbhai Patel",
   ogImage: "parth-avatar.jpg", // Needs replacement or upload
   lightAndDarkMode: true,

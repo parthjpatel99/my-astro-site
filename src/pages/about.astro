@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { SITE } from "../config";
 
 const title = `About ${SITE.author}`;
-const description = "Software Engineer based in Tucson, AZ specializing in Kotlin, Java, Python, and Cloud Technologies.";
+const description = "Backend Software Engineer with 3+ years architecting real-time data systems and APIs for mission-critical autonomous industrial platforms.";
 ---
 
 <Layout title={title} description={description}>
@@ -16,34 +16,22 @@ const description = "Software Engineer based in Tucson, AZ specializing in Kotli
         <img 
           src="/about-portrait.jpg" 
           alt={SITE.author} 
-          class="w-full rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-[1.02]"
+          class="w-full max-h-72 object-cover rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-[1.02]"
         />
       </div>
 
       <!-- Content Section -->
       <div class="flex-1 prose dark:prose-invert max-w-none">
-        <p class="lead text-lg mb-6">
-          I am a Software Engineer transitioning from writing code to orchestrating intelligent systems.
-        </p>
-        
-        <p class="mb-6">
-          Currently, I safeguard mission-critical mining fleets at <strong>Komatsu</strong>, engineering sub-second Kotlin microservices that support $100k+/hour operations.
+        <p class="lead text-lg mb-4">
+          I build the backend systems behind Komatsu's autonomous mining fleet — real-time data services, AI-augmented developer tooling (including a custom <strong>MCP server</strong>), and production-scale deployments. Previously shipped features to <strong>200M+ users</strong> at Evernote and built deep learning pipelines at ISRO.
         </p>
 
         <p class="mb-6">
-          My foundation is built on shipping native mobile apps and building features used by 200M+ users at <strong>Evernote</strong>, but my focus has shifted to <strong>backend architecture</strong> and <strong>Agentic AI workflows</strong>.
-        </p>
-
-        <p class="mb-6">
-          I build software with the same ethos as the Tucson landscape I live in: robust, efficient, and stripped of unnecessary fluff.
-        </p>
-        
-        <p class="mb-8">
-          When I'm not optimizing CI/CD pipelines or exploring <strong>Google Antigravity</strong>, you can find me on the trails near Starr Pass.
+          Always open to conversations about backend systems, AI tooling, or hard infrastructure problems — <a href="mailto:parth8199@gmail.com" class="text-accent">feel free to reach out</a>.
         </p>
 
         <a href="#experience" class="no-underline border-b-2 border-dashed border-accent hover:border-solid transition-all">
-          Check out my experience & skills below.
+          Check out my experience below.
         </a>
       </div>
     </div>
@@ -65,7 +53,7 @@ const description = "Software Engineer based in Tucson, AZ specializing in Kotli
     
     <hr class="my-12 border-skin-line" />
 
-    <!-- Experience Section (Keeping the data provided before but restyled) -->
+    <!-- Experience Section -->
     <h2 id="experience" class="text-2xl font-bold mb-6 font-mono">Experience</h2>
 
     <div class="space-y-12">
@@ -76,10 +64,10 @@ const description = "Software Engineer based in Tucson, AZ specializing in Kotli
         </div>
         <p class="mb-4 italic opacity-80">Software Engineer | Tucson, AZ</p>
         <ul class="list-disc pl-5 space-y-2 opacity-90">
-          <li>Safeguarded mission-critical mining operations valued at $100k+/hour by engineering a low-latency <strong>Kotlin microservice</strong>.</li>
-          <li>Achieved sub-second UI latency for the Fleet Management System by architecting a non-blocking asynchronous communication pattern.</li>
-          <li>Slashed developer onboarding time by 75% by establishing a robust <strong>Azure CI/CD pipeline</strong>.</li>
-          <li>Accelerated deployment velocity by 60% with a zero-error Docker-based release pipeline.</li>
+          <li>Architected a <strong>Kotlin/Spring Boot</strong> data aggregation service for a mission-critical autonomous haulage system, processing real-time telemetry from an active mining fleet valued at <strong>$100K+/hour</strong>.</li>
+          <li>Built an AI-augmented developer toolkit with a custom <strong>MCP server</strong>, cutting API verification time by <strong>50%</strong> and accelerating feature delivery by <strong>2x</strong>.</li>
+          <li>Slashed developer onboarding time by <strong>75%</strong> and established an <strong>Azure CI/CD pipeline</strong> that unblocked cross-team delivery.</li>
+          <li>Designed a Docker-based release pipeline achieving <strong>10x</strong> deployment velocity improvement.</li>
         </ul>
       </div>
 
@@ -88,10 +76,22 @@ const description = "Software Engineer based in Tucson, AZ specializing in Kotli
           <h3 class="text-xl font-bold text-accent">Evernote</h3>
           <span class="text-sm text-muted-foreground font-mono">Jun 2022 – Aug 2022</span>
         </div>
-        <p class="mb-4 italic opacity-80">Software Engineer Intern | Remote, NY</p>
+        <p class="mb-4 italic opacity-80">Software Engineer Intern | Remote</p>
         <ul class="list-disc pl-5 space-y-2 opacity-90">
-          <li>Shipped the "Repeat After Completion" feature to 50,000+ beta users using <strong>TypeScript/GraphQL</strong>.</li>
-          <li>Deployed a reusable task-filtering component to 200M+ users.</li>
+          <li>Shipped the "Repeat After Completion" recurring-task feature to <strong>50K+</strong> beta users using <strong>TypeScript/GraphQL</strong>.</li>
+          <li>Deployed a reusable task-filtering component to <strong>200M+</strong> users across Web, Mobile, and Desktop.</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="flex flex-col sm:flex-row justify-between items-baseline mb-2">
+          <h3 class="text-xl font-bold text-accent">ISRO – Space Applications Center</h3>
+          <span class="text-sm text-muted-foreground font-mono">Dec 2020 – Apr 2021</span>
+        </div>
+        <p class="mb-4 italic opacity-80">Research Intern | Ahmedabad, India</p>
+        <ul class="list-disc pl-5 space-y-2 opacity-90">
+          <li>Achieved <strong>92%</strong> detection accuracy on oceanic eddy identification using a Python deep learning pipeline (Mask R-CNN, YOLO).</li>
+          <li>Transformed raw satellite imagery datasets into structured ML training inputs for ocean circulation classification.</li>
         </ul>
       </div>
     </div>
