@@ -50,6 +50,10 @@ My story isn't an outlier. This is happening everywhere.
 
 Solo founders are shipping products that used to require teams of ten. Engineering teams are getting smaller while their output grows. "Vibe coding" has entered the mainstream vocabulary — and whether you love or hate the term, it reflects a real shift in how software gets made.
 
+Look at what's happening in data engineering. Tasks that used to take a data engineer a week — writing pipelines, transforming schemas, debugging ETL failures — are now being handled by agents with the right context and a well-designed scaffold. The data engineer who built that scaffold is more valuable than ever. The one waiting for a Jira ticket to write another ingestion script is not.
+
+The same pattern is showing up in security, infrastructure, and QA. Penetration testers are using AI to automate reconnaissance. DevOps engineers are generating Terraform and validating drift with agents. QA teams are generating test suites from specs, not writing test cases by hand. In every case, the humans who are winning are the ones who built the systems that let AI do the grunt work — not the ones who are still doing the grunt work themselves.
+
 Companies are starting to hire differently. The job posting that says "5 years of Java experience" is increasingly missing the point. The engineer who deeply understands distributed systems and can wield Claude to implement a service in a weekend is more valuable than the one who has memorized the Java Collections API.
 
 AI-native workflows are becoming a competitive advantage. The teams that figure this out first — that build the tooling, the agent pipelines, the orchestration layers — are going to move at a pace that makes traditional teams look frozen.
@@ -58,13 +62,13 @@ AI-native workflows are becoming a competitive advantage. The teams that figure 
 
 If "Software Builder" is the identity, here are the skills that define it:
 
-**Technical acuity.** Not syntax. Not framework trivia. Deep understanding of systems, architectures, and trade-offs. You need to understand *how things work* at a level that lets you orchestrate effectively. You can't direct agents to build something you don't understand yourself.
+**Technical acuity.** Not syntax. Not framework trivia. Deep understanding of systems, architectures, and trade-offs. You need to understand *how things work* at a level that lets you orchestrate effectively. You can't direct agents to build something you don't understand yourself. The engineer who has internalized distributed systems concepts, failure modes, and data consistency trade-offs will write better prompts, catch worse outputs, and design better scaffolds than someone who just learned to generate code.
 
-**Problem decomposition.** The ability to break a problem into pieces and assign each piece to the right executor — human, AI, agent, or automation. This is the core orchestration skill. What can an agent handle autonomously? What needs human judgment? What's the right interface between them?
+**Problem decomposition.** The ability to break a problem into pieces and assign each piece to the right executor — human, AI, agent, or automation. This is the core orchestration skill. What can an agent handle autonomously? What needs human judgment? What's the right interface between them? Getting this wrong is expensive — either you're bottlenecking AI on decisions it could handle, or you're trusting it with decisions it shouldn't own yet.
 
-**Tool wielding.** Knowing when to write code by hand, when to prompt a model, when to build a tool, and when to build an agent. This is judgment, not dogma. Sometimes the fastest path is 50 lines of Python. Sometimes it's a well-crafted prompt. Sometimes it's building an MCP server that gives agents the context they need to do the job themselves.
+**Tool wielding.** Knowing when to write code by hand, when to prompt a model, when to build a tool, and when to build an agent. This is judgment, not dogma. Sometimes the fastest path is 50 lines of Python. Sometimes it's a well-crafted prompt. Sometimes it's building an MCP server that gives agents the context they need to do the job themselves. The trap is defaulting to one mode — either refusing to use AI out of pride, or over-delegating until nothing is reliable.
 
-**Velocity thinking.** Always asking: *what's the bottleneck?* Then removing it. My API tool wasn't a passion project — it was a bottleneck I identified and eliminated. Builder thinking is always looking for the constraint, the friction, the thing that's slowing the system down — and then building the thing that removes it.
+**Velocity thinking.** Always asking: *what's the bottleneck?* Then removing it. My API tool wasn't a passion project — it was a bottleneck I identified and eliminated. Builder thinking is always looking for the constraint, the friction, the thing that's slowing the system down — and then building the thing that removes it. The compounding effect matters: one well-placed tool can free up hours every week, indefinitely.
 
 ## The Builders Are Already Here
 
