@@ -6,6 +6,7 @@ author: "Parth Janakbhai Patel"
 featured: true
 draft: false
 tags: ["AI", "Career", "Software Engineering", "Developer Velocity", "AI-Native"]
+heroImage: "/assets/blog/software-builders-hero.jpg"
 ---
 
 The title "Software Developer" is a relic. It describes someone who writes code. That used to be enough.
