@@ -1,7 +1,9 @@
 ---
+import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import IconRss from "@/assets/icons/IconRss.svg";
+import avatarImage from "@/assets/images/parth-avatar.jpg";
 import Card from "@/components/Card.astro";
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
@@ -30,9 +32,13 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
     <section id="hero" class="pt-6 pb-4">
       <div class="flex flex-col sm:flex-row items-start gap-4">
         <a href="/about" class="block mx-auto sm:mx-0 group">
-          <img 
-            src="https://github.com/parthjpatel99.png" 
-            alt={SITE.author} 
+          <Image
+            src={avatarImage}
+            alt={SITE.author}
+            width={160}
+            height={160}
+            format="webp"
+            quality={85}
             class="w-40 h-40 rounded-full object-cover flex-shrink-0 transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl"
           />
         </a>
@@ -79,8 +85,8 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
           <section id="featured" class="pt-12 pb-6">
             <h2 class="text-2xl font-semibold tracking-wide">Featured</h2>
             <ul>
-              {featuredPosts.map((data) => (
-                <Card variant="h3" {...data} showImage={false} />
+              {featuredPosts.map((data, i) => (
+                <Card variant="h3" {...data} showImage={false} animIndex={i} />
               ))}
             </ul>
           </section>
@@ -96,7 +102,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
             {recentPosts.map(
               (data, index) =>
                 index < SITE.postPerIndex && (
-                   <Card variant="h3" {...data} showImage={false} />
+                   <Card variant="h3" {...data} showImage={false} animIndex={index} />
                 )
             )}
           </ul>

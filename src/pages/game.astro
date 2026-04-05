@@ -41,6 +41,13 @@ import Layout from "../layouts/Layout.astro";
     </div>
 
     <div class="game-frame-wrapper relative rounded-xl border border-border overflow-hidden shadow-lg">
+      <div id="game-skeleton" class="game-skeleton">
+        <div class="text-center">
+          <div class="game-skeleton-pulse mx-auto mb-4"></div>
+          <p class="text-sm font-mono opacity-60">Loading game...</p>
+        </div>
+      </div>
+
       <iframe
         id="game-iframe"
         src="https://game.parthjpatel.me"
@@ -72,6 +79,16 @@ import Layout from "../layouts/Layout.astro";
     </p>
   </section>
 </Layout>
+
+<script>
+  const iframe = document.getElementById('game-iframe');
+  const skeleton = document.getElementById('game-skeleton');
+  if (iframe && skeleton) {
+    iframe.addEventListener('load', () => {
+      skeleton.classList.add('loaded');
+    });
+  }
+</script>
 
 <style>
   .game-frame-wrapper {

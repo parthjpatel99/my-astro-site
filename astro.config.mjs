@@ -99,7 +99,7 @@ export default defineConfig({
         react(),
         AstroPWA({
             registerType: "autoUpdate",
-            includeAssets: ["favicon.ico", "peter-avatar.jpg"],
+            includeAssets: ["favicon.ico", "parth-avatar.jpg"],
             manifest: {
                 name: "Parth Janakbhai Patel",
                 short_name: "Parth",

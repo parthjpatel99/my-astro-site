@@ -17,7 +17,7 @@ const { links } = Astro.props;
       <Link
         href={link.href}
         external={!link.href.startsWith("/")}
-        class="text-muted-foreground hover:text-foreground"
+        class="text-foreground/60 hover:text-foreground"
         aria-label={link.label}
       >
         <span class="sr-only">{link.label}</span>
