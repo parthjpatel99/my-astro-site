@@ -14,30 +14,49 @@ import Layout from "../layouts/Layout.astro";
           Dodge obstacles. Chase your high score.
         </p>
       </div>
-      <a
-        href="https://game.parthjpatel.me"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 text-sm font-mono text-accent hover:underline underline-offset-4 decoration-wavy shrink-0"
-      >
-        Open in new tab
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="inline-block"
+      <div class="flex items-end gap-5 shrink-0">
+        <div id="scoreboard" class="hidden text-right font-mono">
+          <span class="text-xs opacity-50 uppercase tracking-wider">Best</span>
+          <div id="best-score" class="text-2xl font-bold text-accent tabular-nums leading-tight">0</div>
+        </div>
+        <a
+          href="https://game.parthjpatel.me"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 text-sm font-mono text-accent hover:underline underline-offset-4 decoration-wavy"
         >
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-          <polyline points="15 3 21 3 21 9" />
-          <line x1="10" y1="14" x2="21" y2="3" />
-        </svg>
-      </a>
+          Open in new tab
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Coffee banner — revealed on new best score -->
+    <div
+      id="coffee-banner"
+      class="coffee-banner mb-5 overflow-hidden rounded-xl border border-accent/40"
+      aria-live="polite"
+    >
+      <div class="coffee-inner flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="coffee-icon text-2xl shrink-0" aria-hidden="true">&#9749;</span>
+          <p class="font-mono text-sm leading-snug">
+            <strong class="text-accent">New high score!</strong>
+            <span class="opacity-80"> — You just beat your best. I owe you a coffee. Seriously.</span>
+          </p>
+        </div>
+        <a
+          href="mailto:parth8199@gmail.com?subject=I%20beat%20your%20game%20%E2%80%94%20where%27s%20my%20coffee%3F"
+          class="coffee-cta shrink-0 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-transform hover:scale-105 active:scale-95"
+        >
+          Claim your coffee
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
     </div>
 
     <div class="game-frame-wrapper relative rounded-xl border border-border overflow-hidden shadow-lg">
@@ -51,7 +70,6 @@ import Layout from "../layouts/Layout.astro";
         sandbox="allow-scripts allow-same-origin allow-popups"
       ></iframe>
 
-      <!-- Fallback for no-iframe / JS-disabled contexts -->
       <noscript>
         <div class="p-8 text-center">
           <p class="mb-4 opacity-80">The game requires JavaScript to load.</p>
@@ -72,6 +90,64 @@ import Layout from "../layouts/Layout.astro";
     </p>
   </section>
 </Layout>
+
+<script>
+  function initScoreTracker() {
+    const STORAGE_KEY = "endlessRunnerBest";
+    const scoreboard = document.getElementById("scoreboard");
+    const bestScoreEl = document.getElementById("best-score");
+    const banner = document.getElementById("coffee-banner");
+
+    if (!scoreboard || !bestScoreEl || !banner) return;
+
+    // Load persisted best score
+    let bestScore = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
+
+    function renderScore() {
+      if (bestScore > 0) {
+        scoreboard.classList.remove("hidden");
+        bestScoreEl.textContent = String(bestScore);
+      }
+    }
+
+    renderScore();
+
+    window.addEventListener("message", (event: MessageEvent) => {
+      const data = event.data;
+      if (!data || data.type !== "neonrunner:gameover") return;
+
+      const score: number = data.score ?? 0;
+      const isNewBest: boolean = score > bestScore && score > 0;
+
+      if (isNewBest) {
+        bestScore = score;
+        localStorage.setItem(STORAGE_KEY, String(bestScore));
+        renderScore();
+
+        // Show the banner with animation
+        banner.classList.add("show");
+
+        // Auto-hide after 12 seconds
+        setTimeout(() => {
+          banner.classList.remove("show");
+        }, 12000);
+      } else {
+        // Still update display if game reports a higher best
+        const reportedBest: number = data.best ?? 0;
+        if (reportedBest > bestScore) {
+          bestScore = reportedBest;
+          localStorage.setItem(STORAGE_KEY, String(bestScore));
+          renderScore();
+        }
+      }
+    });
+  }
+
+  initScoreTracker();
+
+  // Re-init on Astro view transitions
+  document.addEventListener("astro:after-swap", initScoreTracker);
+</script>
 
 <style>
   .game-frame-wrapper {
@@ -95,5 +171,42 @@ import Layout from "../layouts/Layout.astro";
       aspect-ratio: 4 / 3;
       min-height: 360px;
     }
+  }
+
+  /* --- Coffee banner --- */
+  .coffee-banner {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition: grid-template-rows 0.4s ease, opacity 0.4s ease, margin 0.4s ease;
+    margin-bottom: 0;
+    background: color-mix(in srgb, var(--accent) 8%, var(--background));
+  }
+
+  .coffee-banner.show {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    margin-bottom: 1.25rem;
+  }
+
+  .coffee-inner {
+    overflow: hidden;
+  }
+
+  .coffee-banner.show .coffee-icon {
+    animation: wiggle 0.5s ease 0.3s;
+  }
+
+  .coffee-cta {
+    background-color: var(--accent);
+    color: var(--background);
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-12deg); }
+    40% { transform: rotate(10deg); }
+    60% { transform: rotate(-6deg); }
+    80% { transform: rotate(4deg); }
   }
 </style>
