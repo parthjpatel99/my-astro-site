@@ -43,14 +43,7 @@
       }
     },
     "ogImage": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "string"
-        }
-      ]
+      "type": "string"
     },
     "heroImage": {
       "type": "string"
