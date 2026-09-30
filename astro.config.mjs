@@ -1,19 +1,44 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
 import sitemap, { ChangeFreqEnum } from "@astrojs/sitemap";
-import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import { remarkLazyLoadImages } from "./src/utils/remarkLazyLoadImages.mjs";
 import { SITE } from "./src/config";
-import AstroPWA from "@vite-pwa/astro";
 
 // https://astro.build/config
 export default defineConfig({
     site: SITE.website,
     trailingSlash: "never",
+    // Self-hosted at build time (no request to Google from visitors' browsers)
+    fonts: [
+        {
+            provider: fontProviders.google(),
+            name: "Instrument Serif",
+            cssVariable: "--font-instrument-serif",
+            weights: [400],
+            styles: ["normal", "italic"],
+            fallbacks: ["Georgia", "serif"],
+        },
+        {
+            provider: fontProviders.google(),
+            name: "IBM Plex Sans",
+            cssVariable: "--font-plex-sans",
+            weights: [400, 500, 600],
+            styles: ["normal", "italic"],
+            fallbacks: ["system-ui", "sans-serif"],
+        },
+        {
+            provider: fontProviders.google(),
+            name: "IBM Plex Mono",
+            cssVariable: "--font-plex-mono",
+            weights: [400, 500],
+            styles: ["normal"],
+            fallbacks: ["ui-monospace", "monospace"],
+        },
+    ],
     markdown: {
         remarkPlugins: [
             remarkToc,
@@ -95,68 +120,6 @@ export default defineConfig({
 
                 return item;
             }
-        }),
-        react(),
-        AstroPWA({
-            registerType: "autoUpdate",
-            includeAssets: ["favicon.ico", "parth-avatar.jpg"],
-            manifest: {
-                name: "Parth Janakbhai Patel",
-                short_name: "Parth",
-                description: "Backend Software Engineer in Tucson, AZ — real-time data platforms, Kotlin/Spring Boot and AI-augmented developer tooling.",
-                theme_color: "#f2ebdf",
-                background_color: "#f2ebdf",
-                display: "standalone",
-                orientation: "portrait",
-                scope: "/",
-                start_url: "/",
-                icons: [
-                    {
-                        src: "favicon.ico",
-                        sizes: "48x48",
-                        type: "image/x-icon",
-                    },
-                ],
-            },
-            workbox: {
-                navigateFallback: "/404",
-                globPatterns: ["**/*.{css,js,html,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}"],
-                runtimeCaching: [
-                    {
-                        urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-                        handler: "CacheFirst",
-                        options: {
-                            cacheName: "google-fonts-cache",
-                            expiration: {
-                                maxEntries: 10,
-                                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-                            },
-                            cacheableResponse: {
-                                statuses: [0, 200],
-                            },
-                        },
-                    },
-                    {
-                        urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
-                        handler: "CacheFirst",
-                        options: {
-                            cacheName: "images-cache",
-                            expiration: {
-                                maxEntries: 100,
-                                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-                            },
-                        },
-                    },
-                ],
-            },
-            devOptions: {
-                enabled: true,
-                suppressWarnings: true,
-                navigateFallbackAllowlist: [/^\//],
-            },
-            experimental: {
-                directoryAndTrailingSlashHandler: true,
-            },
         }),
     ],
     vite: {

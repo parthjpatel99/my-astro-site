@@ -59,9 +59,10 @@
   --color-on-accent: var(--on-accent);
   --color-live: var(--live);
 
-  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Families (with metric-matched fallbacks) come from <Font /> in Layout.astro */
+  --font-display: var(--font-instrument-serif);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
 }
 
 /* Page gutter + max width shared by every section */
@@ -199,14 +200,15 @@
 }
 
 /* Mobile nav slide transition */
+/* Always clipped: otherwise the links spill over the page while the height animates */
 #menu-items {
+  overflow: hidden;
   transition: max-height 0.3s ease, opacity 0.2s ease;
 }
 
 #menu-items.menu-collapsed {
   max-height: 0;
   opacity: 0;
-  overflow: hidden;
 }
 
 #menu-items.menu-expanded {
