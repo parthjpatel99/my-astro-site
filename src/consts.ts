@@ -34,7 +34,7 @@ export const SITE: Site = {
   website: "https://parthjpatel.me/",
   author: "Parth Janakbhai Patel",
   profile: "https://parthjpatel.me/about",
-  desc: "Software Engineer | Real-time Data Systems & APIs | AI-Augmented Developer Tooling | Kotlin, Spring Boot, TypeScript",
+  desc: "Backend Software Engineer in Tucson, AZ building the real-time data platform behind an autonomous mining fleet — Kotlin/Spring Boot, AI-augmented developer tooling (MCP), and notes on building software in the age of agents.",
   title: "Parth Janakbhai Patel",
   ogImage: "og.png",
   lightAndDarkMode: true,

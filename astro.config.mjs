@@ -103,7 +103,7 @@ export default defineConfig({
             manifest: {
                 name: "Parth Janakbhai Patel",
                 short_name: "Parth",
-                description: "Software Engineer based in Tucson, AZ. I build scalable backend systems, cloud infrastructure, and low-latency microservices.",
+                description: "Backend Software Engineer in Tucson, AZ — real-time data platforms, Kotlin/Spring Boot and AI-augmented developer tooling.",
                 theme_color: "#f2ebdf",
                 background_color: "#f2ebdf",
                 display: "standalone",

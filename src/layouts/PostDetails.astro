@@ -77,7 +77,8 @@ const layoutProps = {
 
 /* ========== Field-note numbering + neighbours ========== */
 const numbers = noteNumbers(posts);
-const number = numbers.get(post.id) ?? "01";
+// Unlisted/draft posts aren't numbered
+const number = numbers.get(post.id);
 const index = posts.findIndex((p) => p.id === post.id);
 // `posts` is newest first
 const newer = index > 0 ? posts[index - 1] : null;
@@ -144,14 +145,14 @@ const profile = elevationProfile(post.id);
     <div class="grid gap-y-10 lg:grid-cols-[180px_minmax(0,680px)_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-14 xl:grid-cols-[220px_680px_260px] xl:gap-x-[60px]">
       <div class="hidden flex-col gap-2 lg:flex" data-pagefind-ignore>
         <span class="eyebrow text-xs text-subtle">Field note</span>
-        <span class="font-display text-[140px] leading-[0.8] text-accent">{number}</span>
+        {number && <span class="font-display text-[140px] leading-[0.8] text-accent">{number}</span>}
       </div>
 
       <header class="flex flex-col gap-6 lg:col-span-2">
         <nav aria-label="Breadcrumb" class="flex flex-wrap gap-2.5 font-mono text-[13px] tracking-[0.06em] text-subtle" data-pagefind-ignore>
           <a href="/" class="hover:text-accent">Home</a><span aria-hidden="true">/</span>
           <a href="/posts" class="hover:text-accent">Field notes</a><span aria-hidden="true">/</span>
-          <span class="text-foreground" aria-current="page">No. {number}</span>
+          <span class="text-foreground" aria-current="page">{number ? `No. ${number}` : "Unlisted"}</span>
         </nav>
         <h1
           transition:name={slugifyStr(title)}

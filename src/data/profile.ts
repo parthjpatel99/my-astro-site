@@ -27,6 +27,7 @@ export interface Stop {
   current?: boolean;
   stat: string;
   statCaption: string;
+  /** A few highlights for flavor — the resume has the full detail. May contain <strong>. */
   bullets: string[];
 }
 
@@ -39,10 +40,9 @@ export const ROUTE: Stop[] = [
     dates: "Dec 2020 – Apr 2021",
     stat: "92%",
     statCaption:
-      "detection accuracy teaching Mask R-CNN and YOLO to spot oceanic eddies in raw satellite imagery.",
+      "detection accuracy teaching Mask R-CNN and YOLO to spot oceanic eddies in terabytes of satellite imagery.",
     bullets: [
-      "Achieved <strong>92%</strong> detection accuracy on oceanic eddy identification using a Python deep learning pipeline (Mask R-CNN, YOLO).",
-      "Transformed raw satellite imagery datasets into structured ML training inputs for ocean circulation classification.",
+      "Built a Python deep learning pipeline (Mask R-CNN, YOLO) that found oceanic eddies in raw satellite imagery with <strong>92%</strong> accuracy, batching terabytes of data without running out of memory.",
     ],
   },
   {
@@ -54,25 +54,27 @@ export const ROUTE: Stop[] = [
     statCaption:
       "users got the task-filtering component I shipped across web, mobile and desktop, in TypeScript and GraphQL.",
     bullets: [
-      "Shipped the “Repeat After Completion” recurring-task feature to <strong>50K+</strong> beta users using <strong>TypeScript/GraphQL</strong>.",
-      "Deployed a reusable task-filtering component to <strong>200M+</strong> users across Web, Mobile, and Desktop.",
+      "Shipped “Repeat After Completion” recurring tasks to <strong>50K+</strong> beta users — time-zone-aware recurrence logic in <strong>TypeScript/GraphQL</strong>.",
+      "Built a reusable task-filtering component that reached <strong>200M+</strong> users across web, mobile and desktop.",
     ],
   },
   {
     company: "Komatsu",
-    role: "Software Engineer, autonomous haulage",
+    role: "Software Engineer II, autonomous haulage",
     place: "Tucson",
     dates: "Feb 2023 – now",
     current: true,
     stat: "2×",
     statCaption: "faster feature delivery after building an AI dev toolkit around a custom MCP server.",
     bullets: [
-      "Architected a <strong>Kotlin/Spring Boot</strong> data aggregation service for a mission-critical autonomous haulage system, processing real-time telemetry from an active mining fleet valued at <strong>$100K+/hour</strong>.",
-      "Built an AI-augmented developer toolkit with a custom <strong>MCP server</strong>, cutting API verification time by <strong>50%</strong> and accelerating feature delivery by <strong>2x</strong>.",
-      "Slashed developer onboarding time by <strong>75%</strong> and established an <strong>Azure CI/CD pipeline</strong> that unblocked cross-team delivery.",
-      "Designed a Docker-based release pipeline achieving <strong>10x</strong> deployment velocity improvement.",
+      "Own the <strong>Kotlin/Spring Boot</strong> data aggregation service that is the single source of truth for an autonomous haulage system — real-time telemetry from a fleet whose operations run <strong>$100K+/hour</strong>.",
+      "Built an AI-augmented developer toolkit around a custom <strong>MCP server</strong> that lets coding agents search, call and validate our APIs, halving API verification time and doubling feature delivery.",
+      "Cut developer onboarding by <strong>75%</strong> and serve as the technical liaison for partner teams building on the platform.",
     ],
   },
 ];
+
+export const SUMMARY =
+  "Backend Software Engineer owning the real-time data platform behind a production autonomous haulage system. Depth in distributed Kotlin/Spring Boot service design, AI-augmented developer tooling (MCP, LLM agent integration), and consumer-scale delivery to 200M+ users.";
 
 export const GAME_URL = "https://game.parthjpatel.me";

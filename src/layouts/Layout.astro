@@ -177,6 +177,17 @@ const structuredData = pubDatetime
       tick();
       setInterval(tick, 15_000);
       document.addEventListener("astro:page-load", tick);
+
+      // Deep links (/about#experience, a post's #heading) — the ClientRouter switches
+      // history.scrollRestoration to "manual" on load and the browser's own jump to
+      // the fragment gets lost, so do it ourselves unless the reader already scrolled.
+      const jumpToHash = () => {
+        if (!location.hash || window.scrollY > 10) return;
+        const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+        target?.scrollIntoView({ behavior: "instant", block: "start" });
+      };
+      if (document.readyState === "complete") jumpToHash();
+      else window.addEventListener("load", jumpToHash, { once: true });
     </script>
   </body>
 </html>

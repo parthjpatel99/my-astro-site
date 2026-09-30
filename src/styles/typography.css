@@ -27,6 +27,11 @@
     counter-reset: waypoint;
   }
 
+  /* Clear the sticky header + elevation bar when jumping to a heading */
+  .prose :is(h2, h3, h4) {
+    scroll-margin-top: 8.5rem;
+  }
+
   .prose h2 {
     @apply mt-16 mb-6 flex items-baseline gap-4 font-display text-4xl leading-[1.1] font-normal sm:text-[2.75rem];
     counter-increment: waypoint;
