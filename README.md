@@ -44,3 +44,7 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## Credits
+
+Originally based on [steipete.me](https://github.com/steipete/steipete.me) by Peter Steinberger (MIT); see `LICENSE`.
