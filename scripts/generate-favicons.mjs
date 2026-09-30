@@ -6,6 +6,9 @@
  *
  * Writes public/favicon.svg (adaptive: night tile on light browsers, sand tile
  * on dark ones), public/favicon.ico (16/32/48) and public/apple-touch-icon.png.
+ *
+ * After changing the icons, bump the ?v= query on the <link> tags in
+ * src/layouts/Layout.astro — browsers cache favicons by URL.
  */
 import fs from "node:fs";
 import { Resvg } from "@resvg/resvg-js";
