@@ -200,14 +200,15 @@
 }
 
 /* Mobile nav slide transition */
+/* Always clipped: otherwise the links spill over the page while the height animates */
 #menu-items {
+  overflow: hidden;
   transition: max-height 0.3s ease, opacity 0.2s ease;
 }
 
 #menu-items.menu-collapsed {
   max-height: 0;
   opacity: 0;
-  overflow: hidden;
 }
 
 #menu-items.menu-expanded {
