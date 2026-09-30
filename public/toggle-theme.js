@@ -53,7 +53,14 @@ function setPreference(isManualChange = false) {
 function reflectPreference() {
   document.documentElement.setAttribute("data-theme", themeValue);
 
-  document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
+  document
+    .querySelector("#theme-btn")
+    ?.setAttribute("aria-label", themeValue === "dark" ? "Switch to day mode" : "Switch to night mode");
+
+  // Keep the browser UI (address bar) in step with the page background
+  document
+    .querySelectorAll('meta[name="theme-color"]')
+    .forEach((m) => m.setAttribute("content", themeValue === "dark" ? "#14110e" : "#f2ebdf"));
 
   // Get a reference to the body element
   const body = document.body;

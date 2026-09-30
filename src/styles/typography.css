@@ -1,33 +1,130 @@
 @plugin '@tailwindcss/typography';
 
-@layer base {
+/* Unlayered on purpose: beats the typography plugin's utility-layer defaults */
   .prose {
-    @apply prose-headings:!mb-3 prose-headings:!text-foreground prose-h3:italic prose-p:!text-foreground prose-a:!text-foreground prose-a:!decoration-dashed prose-a:underline-offset-8 hover:prose-a:text-accent prose-blockquote:!border-l-accent/50 prose-blockquote:opacity-80 prose-figcaption:!text-foreground prose-figcaption:opacity-70 prose-strong:!text-foreground prose-code:rounded prose-code:bg-muted/75 prose-code:p-1 prose-code:!text-foreground prose-code:before:!content-none prose-code:after:!content-none prose-ol:!text-foreground prose-ul:overflow-x-clip prose-ul:!text-foreground prose-li:marker:!text-accent prose-table:text-foreground prose-th:border prose-th:border-border prose-td:border prose-td:border-border prose-img:mx-auto prose-img:!my-2 prose-img:border-2 prose-img:border-border prose-hr:!border-border;
+    --tw-prose-body: var(--foreground);
+    --tw-prose-headings: var(--foreground);
+    --tw-prose-links: var(--foreground);
+    --tw-prose-bold: var(--foreground);
+    --tw-prose-counters: var(--subtle);
+    --tw-prose-bullets: var(--accent);
+    --tw-prose-hr: var(--border);
+    --tw-prose-quotes: var(--foreground);
+    --tw-prose-quote-borders: var(--foreground);
+    --tw-prose-captions: var(--subtle);
+    --tw-prose-code: var(--foreground);
+    --tw-prose-th-borders: var(--border);
+    --tw-prose-td-borders: var(--border);
+    @apply max-w-none text-[1.1875rem] leading-[1.72] sm:text-xl;
   }
+
   .prose a {
-    @apply break-words hover:!text-accent;
+    @apply break-words decoration-accent decoration-1 underline-offset-[5px] hover:text-accent;
   }
+
+  /* Headings: display serif, auto-numbered in mono like waypoints */
+  .prose {
+    counter-reset: waypoint;
+  }
+
+  /* Clear the sticky header + elevation bar when jumping to a heading */
+  .prose :is(h2, h3, h4) {
+    scroll-margin-top: 8.5rem;
+  }
+
+  .prose h2 {
+    @apply mt-16 mb-6 flex items-baseline gap-4 font-display text-4xl leading-[1.1] font-normal sm:text-[2.75rem];
+    counter-increment: waypoint;
+  }
+
+  .prose h2::before {
+    content: counter(waypoint, decimal-leading-zero);
+    @apply shrink-0 font-mono text-sm text-accent;
+  }
+
+  .prose h3 {
+    @apply mt-10 font-display text-3xl leading-tight font-normal italic;
+  }
+
+  /* Drop cap on the opening paragraph */
+  .prose > p:first-of-type::first-letter {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 6.75rem;
+    line-height: 0.78;
+    padding: 0.5rem 0.875rem 0 0;
+    color: var(--accent);
+  }
+
+  /* Blockquotes become pull quotes */
+  .prose blockquote {
+    @apply my-12 border-y border-l-0 border-foreground py-9 text-center font-display text-4xl leading-[1.12] font-normal not-italic sm:text-5xl;
+  }
+
+  .prose blockquote p::before,
+  .prose blockquote p::after {
+    content: none;
+  }
+
+  .prose blockquote em,
+  .prose blockquote strong {
+    @apply font-normal text-accent;
+  }
+
+  .prose strong {
+    @apply font-semibold;
+  }
+
+  .prose img {
+    @apply mx-auto my-8 rounded-2xl;
+  }
+
+  .prose figcaption {
+    @apply font-mono text-xs tracking-wide;
+  }
+
+  .prose ul {
+    @apply overflow-x-clip;
+  }
+
+  .prose code {
+    @apply rounded bg-muted px-1.5 py-0.5 text-[0.875em] font-normal before:content-none after:content-none;
+  }
+
+  .prose th,
+  .prose td {
+    @apply border border-border;
+  }
+
   .prose thead th:first-child,
   tbody td:first-child,
   tfoot td:first-child {
     padding-inline-start: 0.5714286em !important;
   }
+
   .prose h2#table-of-contents {
     @apply mb-2;
   }
+
   .prose details {
     @apply inline-block cursor-pointer text-foreground select-none;
   }
+
   .prose summary {
     @apply focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed;
   }
+
   .prose h2#table-of-contents + p {
     @apply hidden;
   }
 
   /* ===== Code Blocks & Syntax Highlighting ===== */
   pre:has(code) {
-    @apply border border-border;
+    @apply rounded-xl border border-border;
+  }
+
+  .prose pre code {
+    @apply bg-transparent p-0;
   }
 
   .prose code,
@@ -36,7 +133,6 @@
   }
 
   .prose table code {
-    /* add line breaks whenever necessary for codes under table */
     @apply break-all sm:break-normal;
   }
 
@@ -49,12 +145,10 @@
   html[data-theme="light"] pre:has(code) span,
   :root pre:has(code),
   :root pre:has(code) span {
-    /* Darken comment colors by ~30% total for better contrast */
     --shiki-color-comment: #495057;
     --shiki-token-comment: #495057;
   }
 
-  /* Override inline styles for comments in light mode */
   html[data-theme="light"] pre code span[style*="color:#6C757D"],
   :root pre code span[style*="color:#6C757D"] {
     color: #495057 !important;
@@ -69,4 +163,3 @@
     font-weight: var(--shiki-dark-font-weight) !important;
     text-decoration: var(--shiki-dark-text-decoration) !important;
   }
-}

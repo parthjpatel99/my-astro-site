@@ -3,6 +3,7 @@ title: '"Software Builders" in the Age of AI'
 pubDatetime: 2026-03-29
 description: "The title 'Software Developer' is a relic. The real skill now is technical acuity — knowing what to build and wielding AI to make it real."
 author: "Parth Janakbhai Patel"
+tldr: "Value is moving from writing code to deciding what should exist."
 featured: true
 draft: false
 tags: ["AI", "Career", "Software Engineering", "Developer Velocity", "AI-Native"]

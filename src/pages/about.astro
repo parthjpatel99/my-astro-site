@@ -1,120 +1,121 @@
 ---
 import { Image } from "astro:assets";
 import aboutPortrait from "@/assets/images/about-portrait.jpg";
-import Layout from "../layouts/Layout.astro";
-import { SITE } from "../config";
+import PageHeader from "@/components/PageHeader.astro";
+import StructuredData from "@/components/StructuredData.astro";
+import { SITE } from "@/config";
+import { LOCATION, ROUTE, SUMMARY } from "@/data/profile";
+import Layout from "@/layouts/Layout.astro";
 
 const title = `About ${SITE.author}`;
-const description = "Backend Software Engineer with 3+ years architecting real-time data systems and APIs for mission-critical autonomous industrial platforms.";
+const description = SUMMARY;
+// Newest first on this page
+const stops = [...ROUTE].reverse();
 ---
 
 <Layout title={title} description={description}>
-  <section class="max-w-3xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">About</h1>
-    
-    <div class="flex flex-col md:flex-row gap-8 items-start">
-      <!-- Image Section -->
-      <div class="w-full md:w-1/3 flex-shrink-0">
+  <StructuredData type="Person" data={{}} />
+  <main id="main-content" class="wrap">
+    <PageHeader eyebrow={`About · ${LOCATION.city}`} title="Hi, I’m Parth." />
+
+    <div class="grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16">
+      <figure class="relative">
         <Image
           src={aboutPortrait}
           alt={SITE.author}
-          width={400}
-          height={288}
+          width={640}
+          height={720}
           format="webp"
-          quality={85}
-          class="w-full max-h-72 object-cover rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-[1.02]"
+          quality={82}
+          class="aspect-[8/9] w-full rounded-[20px] object-cover"
         />
-      </div>
-
-      <!-- Content Section -->
-      <div class="flex-1 prose dark:prose-invert max-w-none">
-        <p class="lead text-lg mb-4">
-          I build the backend systems behind Komatsu's autonomous mining fleet — real-time data services, AI-augmented developer tooling (including a custom <strong>MCP server</strong>), and production-scale deployments. Previously shipped features to <strong>200M+ users</strong> at Evernote and built deep learning pipelines at ISRO.
+        <figcaption class="mt-3 font-mono text-xs tracking-[0.06em] text-subtle">
+          {LOCATION.coords.toUpperCase()} · <span data-clock>--:--</span> {LOCATION.timezoneLabel}
+        </figcaption>
+      </figure>
+      <div class="flex flex-col gap-6 text-lg leading-relaxed sm:text-xl">
+        <p class="font-display text-[clamp(1.75rem,3vw,2.5rem)] leading-[1.2]">
+          I own the real-time data platform behind Komatsu’s autonomous haulage system — distributed Kotlin/Spring Boot services and
+          AI-augmented developer tooling, including a custom <em class="text-accent">MCP server</em> that lets coding agents work with our APIs.
         </p>
-
-        <p class="mb-6">
-          Always open to conversations about backend systems, AI tooling, or hard infrastructure problems — <a href="mailto:parth8199@gmail.com" class="text-accent">feel free to reach out</a>.
+        <p>
+          I’m a Software Engineer II in Tucson and the go-to technical liaison for the partner teams that build on the platform. Before that I
+          shipped features to <strong>200M+ users</strong> at Evernote and built deep learning pipelines at ISRO.
         </p>
-
-        <a href="#experience" class="no-underline border-b-2 border-dashed border-accent hover:border-solid transition-all">
-          Check out my experience below.
-        </a>
+        <p>
+          Always open to conversations about backend systems, AI tooling, or hard infrastructure problems —
+          <a href="mailto:parth8199@gmail.com" class="text-accent underline decoration-1 underline-offset-[5px]">feel free to reach out</a>.
+        </p>
+        <div class="mt-2 flex flex-wrap gap-3">
+          <a href="#experience" class="flex h-[52px] items-center rounded-full bg-foreground px-[26px] text-base font-medium text-background transition-transform hover:-translate-y-0.5">
+            See the route
+          </a>
+          <a href="/posts" class="flex h-[52px] items-center rounded-full border border-foreground px-[26px] text-base font-medium transition-colors hover:bg-foreground hover:text-background">
+            Read the field notes
+          </a>
+        </div>
       </div>
     </div>
 
-    <!-- GitHub Activity Section -->
-    <div class="mt-16">
-      <h2 class="text-2xl font-bold mb-6 font-mono">GitHub Activity</h2>
-      <div class="p-4 border border-border rounded-lg bg-muted opacity-80 hover:opacity-100 transition-opacity">
+    <section id="experience" class="scroll-mt-24 pt-24 sm:pt-32">
+      <div class="flex flex-col gap-[18px]">
+        <span class="eyebrow text-accent">The route so far</span>
+        <h2 class="font-display text-[clamp(3rem,6vw,4.75rem)] leading-none tracking-[-0.015em]">From ocean eddies<br />to open-pit mines.</h2>
+      </div>
+      <ol class="relative mt-14 flex flex-col">
+        {
+          stops.map((stop, i) => (
+            <li class="relative grid gap-4 border-t border-border py-10 pl-10 md:grid-cols-[260px_minmax(0,1fr)_200px] md:gap-10 md:pl-12">
+              {i < stops.length - 1 && (
+                <span class="absolute top-[3.1rem] bottom-[-3.1rem] left-[7px] border-l-2 border-dashed border-contour-strong" aria-hidden="true" />
+              )}
+              <span class="absolute top-11 left-0 flex size-4 items-center justify-center" aria-hidden="true">
+                {stop.current && <span class="absolute size-4 animate-ping rounded-full bg-accent opacity-60 motion-reduce:animate-none" />}
+                <span class:list={["relative size-4 rounded-full border-2", stop.current ? "border-accent bg-accent" : "border-foreground bg-background"]} />
+              </span>
+              <div class="flex flex-col gap-2">
+                <span class:list={["font-mono text-xs tracking-[0.1em] uppercase", stop.current ? "text-accent" : "text-subtle"]}>
+                  {stop.dates}
+                </span>
+                <h3 class="font-display text-[34px] leading-[1.1]">{stop.company}</h3>
+                <span class="text-[15px] text-subtle">
+                  {stop.role} · {stop.place}
+                </span>
+              </div>
+              <ul class="flex list-disc flex-col gap-2.5 pl-5 leading-relaxed marker:text-accent [&_strong]:font-semibold">
+                {stop.bullets.map((b) => (
+                  <li set:html={b} />
+                ))}
+              </ul>
+              <div class="flex flex-col gap-1 md:items-end md:text-right">
+                <span class="font-display text-6xl leading-none text-accent">{stop.stat}</span>
+                <span class="text-sm leading-snug text-subtle">{stop.statCaption}</span>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="pt-16 sm:pt-24">
+      <div class="flex flex-col gap-[18px]">
+        <span class="eyebrow text-accent">Commit log</span>
+        <h2 class="font-display text-[clamp(2.5rem,5vw,3.75rem)] leading-none tracking-[-0.015em]">I build what excites me.</h2>
+        <p class="max-w-2xl text-lg text-subtle">…and release it all as open source.</p>
+      </div>
+      <a
+        href="https://github.com/parthjpatel99"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-8 block overflow-x-auto rounded-[20px] border border-border bg-surface p-5 transition-colors hover:border-accent sm:p-8"
+      >
         <img
-          src={`https://ghchart.rshah.org/${SITE.author.split(' ')[0]}jpatel99`}
-          alt="GitHub Contribution Chart"
-          class="w-full dark:invert"
+          src="https://ghchart.rshah.org/C2410C/parthjpatel99"
+          alt="GitHub contribution chart for parthjpatel99"
+          class="min-w-[640px] w-full dark:brightness-125"
           loading="lazy"
         />
-      </div>
-      <p class="mt-4 italic text-foreground/60">
-        I build what excites me and release it all as open source.
-      </p>
-    </div>
-    
-    <hr class="my-12 border-border" />
-
-    <!-- Experience Section -->
-    <h2 id="experience" class="text-2xl font-bold mb-6 font-mono">Experience</h2>
-
-    <div class="space-y-12">
-      <div class="timeline-entry">
-        <div class="flex flex-col sm:flex-row justify-between items-baseline mb-2">
-          <h3 class="text-xl font-bold text-accent">Komatsu</h3>
-          <span class="text-sm text-foreground/60 font-mono">Feb 2023 – Present</span>
-        </div>
-        <p class="mb-4 italic opacity-80">Software Engineer | Tucson, AZ</p>
-        <ul class="list-disc pl-5 space-y-2 opacity-90">
-          <li>Architected a <strong>Kotlin/Spring Boot</strong> data aggregation service for a mission-critical autonomous haulage system, processing real-time telemetry from an active mining fleet valued at <strong>$100K+/hour</strong>.</li>
-          <li>Built an AI-augmented developer toolkit with a custom <strong>MCP server</strong>, cutting API verification time by <strong>50%</strong> and accelerating feature delivery by <strong>2x</strong>.</li>
-          <li>Slashed developer onboarding time by <strong>75%</strong> and established an <strong>Azure CI/CD pipeline</strong> that unblocked cross-team delivery.</li>
-          <li>Designed a Docker-based release pipeline achieving <strong>10x</strong> deployment velocity improvement.</li>
-        </ul>
-      </div>
-
-      <div class="timeline-entry">
-        <div class="flex flex-col sm:flex-row justify-between items-baseline mb-2">
-          <h3 class="text-xl font-bold text-accent">Evernote</h3>
-          <span class="text-sm text-foreground/60 font-mono">Jun 2022 – Aug 2022</span>
-        </div>
-        <p class="mb-4 italic opacity-80">Software Engineer Intern | Remote</p>
-        <ul class="list-disc pl-5 space-y-2 opacity-90">
-          <li>Shipped the "Repeat After Completion" recurring-task feature to <strong>50K+</strong> beta users using <strong>TypeScript/GraphQL</strong>.</li>
-          <li>Deployed a reusable task-filtering component to <strong>200M+</strong> users across Web, Mobile, and Desktop.</li>
-        </ul>
-      </div>
-
-      <div class="timeline-entry">
-        <div class="flex flex-col sm:flex-row justify-between items-baseline mb-2">
-          <h3 class="text-xl font-bold text-accent">ISRO – Space Applications Center</h3>
-          <span class="text-sm text-foreground/60 font-mono">Dec 2020 – Apr 2021</span>
-        </div>
-        <p class="mb-4 italic opacity-80">Research Intern | Ahmedabad, India</p>
-        <ul class="list-disc pl-5 space-y-2 opacity-90">
-          <li>Achieved <strong>92%</strong> detection accuracy on oceanic eddy identification using a Python deep learning pipeline (Mask R-CNN, YOLO).</li>
-          <li>Transformed raw satellite imagery datasets into structured ML training inputs for ocean circulation classification.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="mt-16 p-8 bg-muted rounded-2xl border border-border text-center">
-      <h2 class="text-2xl font-bold mb-4">Stay Connected</h2>
-      <p class="mb-6">Follow me on GitHub and catch the back-story in my contributions.</p>
-      <div class="flex justify-center gap-4">
-         <a href="https://github.com/parthjpatel99" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-foreground text-background font-bold rounded-lg border border-border hover:bg-foreground/80 hover:scale-[1.03] transition-all duration-200">
-           GitHub
-         </a>
-         <a href="https://linkedin.com/in/parthjpatel99" target="_blank" rel="noopener noreferrer" class="px-6 py-3 bg-[#0077b5] text-white font-bold rounded-lg hover:opacity-90 hover:scale-[1.03] transition-all duration-200">
-           LinkedIn
-         </a>
-      </div>
-    </div>
-
-  </section>
+      </a>
+    </section>
+  </main>
 </Layout>

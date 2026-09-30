@@ -1,15 +1,18 @@
 ---
+import PageHeader from "@/components/PageHeader.astro";
 import { SITE } from "@/config";
 
 interface StringTitleProp {
   pageTitle: string;
   pageDesc?: string;
+  eyebrow?: string;
 }
 
 interface ArrayTitleProp {
   pageTitle: [string, string];
   titleTransition: string;
   pageDesc?: string;
+  eyebrow?: string;
 }
 
 export type Props = StringTitleProp | ArrayTitleProp;
@@ -17,33 +20,22 @@ export type Props = StringTitleProp | ArrayTitleProp;
 const { props } = Astro;
 
 const backUrl = SITE.showBackButton ? Astro.url.pathname : "/";
+const title = Array.isArray(props.pageTitle) ? props.pageTitle.join(" ") : props.pageTitle;
 ---
 
-<main
-  data-backUrl={backUrl}
-  id="main-content"
-  class="mx-auto w-full max-w-3xl px-4 pb-4"
->
-  {
-    "titleTransition" in props ? (
-      <h1 class="text-2xl font-semibold sm:text-3xl mt-8">
-        {props.pageTitle[0]}
-        <span transition:name={props.titleTransition}>
-          {props.pageTitle[1]}
-        </span>
-      </h1>
-    ) : (
-      <h1 class="text-2xl font-semibold sm:text-3xl mt-8">{props.pageTitle}</h1>
-    )
-  }
-  <p class="mt-2 mb-6 italic">{props.pageDesc}</p>
+<main data-backUrl={backUrl} id="main-content" class="wrap pb-4">
+  <PageHeader
+    eyebrow={props.eyebrow ?? "parthjpatel.me"}
+    title={title}
+    description={props.pageDesc}
+    titleTransition={"titleTransition" in props ? props.titleTransition : undefined}
+  />
   <slot />
 </main>
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const mainContent: HTMLElement | null =
-      document.querySelector("#main-content");
+    const mainContent: HTMLElement | null = document.querySelector("#main-content");
     const backUrl = mainContent?.dataset?.backurl;
     if (backUrl) {
       sessionStorage.setItem("backUrl", backUrl);

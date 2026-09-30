@@ -1,0 +1,26 @@
+---
+import { contours, type Peak } from "@/utils/topo";
+
+export interface Props {
+  peaks: Peak[];
+  width: number;
+  height: number;
+  class?: string;
+  preserveAspectRatio?: string;
+}
+
+const { peaks, width, height, class: className = "", preserveAspectRatio = "xMidYMid slice" } = Astro.props;
+const { minor, index } = contours(peaks);
+---
+
+<svg
+  class={className}
+  viewBox={`0 0 ${width} ${height}`}
+  preserveAspectRatio={preserveAspectRatio}
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={minor} fill="none" stroke="var(--contour)" stroke-width="0.9" vector-effect="non-scaling-stroke"></path>
+  <path d={index} fill="none" stroke="var(--contour-strong)" stroke-width="1.5" vector-effect="non-scaling-stroke"></path>
+  <slot />
+</svg>
