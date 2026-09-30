@@ -1,5 +1,27 @@
-async function loadGoogleFont(font: string, text: string, weight: number): Promise<ArrayBuffer> {
-  const API = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(text)}`;
+/**
+ * Fonts for the Satori OG-image templates. Satori needs raw TTF/OTF data, so
+ * we ask the Google Fonts CSS API (with an old User-Agent, which makes it
+ * serve TrueType) for just the glyphs in `text`.
+ */
+export interface OgFont {
+  /** Family name as referenced in the template's `fontFamily` */
+  name: string;
+  /** Google Fonts family, URL-encoded (e.g. "IBM+Plex+Mono") */
+  family: string;
+  weight: 400 | 500 | 600 | 700;
+  style: "normal" | "italic";
+}
+
+export const OG_FONTS: OgFont[] = [
+  { name: "Instrument Serif", family: "Instrument+Serif", weight: 400, style: "normal" },
+  { name: "Instrument Serif", family: "Instrument+Serif", weight: 400, style: "italic" },
+  { name: "IBM Plex Mono", family: "IBM+Plex+Mono", weight: 400, style: "normal" },
+  { name: "IBM Plex Mono", family: "IBM+Plex+Mono", weight: 500, style: "normal" },
+];
+
+async function loadGoogleFont({ family, weight, style }: OgFont, text: string): Promise<ArrayBuffer> {
+  const axis = style === "italic" ? `ital,wght@1,${weight}` : `wght@${weight}`;
+  const API = `https://fonts.googleapis.com/css2?family=${family}:${axis}&text=${encodeURIComponent(text)}`;
 
   const css = await (
     await fetch(API, {
@@ -12,43 +34,29 @@ async function loadGoogleFont(font: string, text: string, weight: number): Promi
 
   const resource = css.match(/src: url\((.+?)\) format\('(opentype|truetype)'\)/);
 
-  if (!resource) throw new Error("Failed to download dynamic font");
+  if (!resource) throw new Error(`Failed to download font ${family} ${weight} ${style}`);
 
   const res = await fetch(resource[1]);
 
   if (!res.ok) {
-    throw new Error("Failed to download dynamic font. Status: " + res.status);
+    throw new Error(`Failed to download font ${family}. Status: ${res.status}`);
   }
 
   return res.arrayBuffer();
 }
 
 async function loadGoogleFonts(
-  text: string
-): Promise<Array<{ name: string; data: ArrayBuffer; weight: number; style: string }>> {
-  const fontsConfig = [
-    {
-      name: "IBM Plex Mono",
-      font: "IBM+Plex+Mono",
-      weight: 400,
-      style: "normal",
-    },
-    {
-      name: "IBM Plex Mono",
-      font: "IBM+Plex+Mono",
-      weight: 700,
-      style: "bold",
-    },
-  ];
-
-  const fonts = await Promise.all(
-    fontsConfig.map(async ({ name, font, weight, style }) => {
-      const data = await loadGoogleFont(font, text, weight);
-      return { name, data, weight, style };
-    })
+  text: string,
+  fonts: OgFont[] = OG_FONTS
+): Promise<Array<{ name: string; data: ArrayBuffer; weight: OgFont["weight"]; style: OgFont["style"] }>> {
+  return Promise.all(
+    fonts.map(async (font) => ({
+      name: font.name,
+      data: await loadGoogleFont(font, text),
+      weight: font.weight,
+      style: font.style,
+    }))
   );
-
-  return fonts;
 }
 
 export default loadGoogleFonts;
