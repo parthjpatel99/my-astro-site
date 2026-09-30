@@ -19,6 +19,8 @@ const blog = defineCollection({
             ogImage: image().or(z.string()).optional(),
             heroImage: z.string().optional(),
             description: z.string(),
+            /** One-line summary shown as "The short version" beside the post */
+            tldr: z.string().optional(),
             canonicalURL: z.string().optional(),
             hideEditPost: z.boolean().optional(),
             timezone: z.string().optional(),

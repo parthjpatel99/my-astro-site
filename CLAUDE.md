@@ -37,12 +37,27 @@ Key frontmatter fields: `title`, `pubDatetime`, `description`, `tags`, `featured
 
 ### Styling & Theming
 
-Tailwind v4 via `@tailwindcss/vite` plugin (not PostCSS). Theme uses CSS custom properties defined in `src/styles/global.css`:
-- Light: blue accent (#006cac), desert background pattern
-- Dark: orange accent (#ff6b01), inverted background filter
+Design concept: "Telemetry from the Sonoran desert" — sandstone ground, topographic contours, mono telemetry labels.
+
+Tailwind v4 via `@tailwindcss/vite` plugin (not PostCSS). Tokens are CSS custom properties in `src/styles/global.css`, exposed with `@theme inline`:
+- Day (light): sand `#f2ebdf` background, ocotillo accent `#c2410c`
+- Night (dark): `#14110e` background, sunset accent `#ff7a1a`
+- Any element with `data-theme="dark"` re-scopes the tokens (used for the Recess band, 404 map, "short version" card). In raw SVG attributes use `var(--accent)` etc., **not** `var(--color-accent)` — the `--color-*` aliases resolve at `:root` and won't re-scope.
+- Utilities: `wrap` (page gutter + 1440px max width), `eyebrow` (mono uppercase label)
 - Theme toggle in `public/toggle-theme.js` persists to localStorage with 24h expiration, then falls back to system preference
 
-Custom font: Atkinson (loaded from `src/assets/fonts/`).
+Fonts (Google Fonts, linked in `Layout.astro`): Instrument Serif (`font-display`), IBM Plex Sans (`font-sans`, body), IBM Plex Mono (`font-mono`).
+
+Prose overrides in `src/styles/typography.css` are intentionally **unlayered** so they beat the typography plugin (numbered serif h2s, drop cap, blockquotes as pull quotes).
+
+### Signature pieces
+
+- `src/components/Topo.astro` + `src/utils/topo.ts` — procedural contour maps rendered at build time (no client JS); `elevationProfile()` draws the post reading-progress ridge
+- `src/components/CommandPalette.astro` — ⌘K / Ctrl K / `/` palette: static nav, posts and actions plus Pagefind full-text results (search results only after a full build)
+- `src/data/profile.ts` — hero/telemetry copy and the experience "route" (shared by home and About)
+- `src/utils/notes.ts` — field-note numbering (oldest = No. 01), dates, read times
+- `[data-clock]` elements show live Tucson time (script in `Layout.astro`)
+- Optional `tldr` frontmatter shows as "The short version" beside a post
 
 ### OG Image Generation
 

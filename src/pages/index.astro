@@ -1,129 +1,228 @@
 ---
-import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
-import IconRss from "@/assets/icons/IconRss.svg";
-import avatarImage from "@/assets/images/parth-avatar.jpg";
-import Card from "@/components/Card.astro";
-import Footer from "@/components/Footer.astro";
-import Header from "@/components/Header.astro";
-import Hr from "@/components/Hr.astro";
-import LinkButton from "@/components/LinkButton.astro";
-import Socials from "@/components/Socials.astro";
+import NoteRow from "@/components/NoteRow.astro";
 import StructuredData from "@/components/StructuredData.astro";
-import { SITE, SOCIALS } from "@/config";
+import Topo from "@/components/Topo.astro";
+import { SITE } from "@/config";
+import { GAME_URL, LOCATION, NOW, ROUTE } from "@/data/profile";
 import Layout from "@/layouts/Layout.astro";
+import { getPath } from "@/utils/getPath";
 import getSortedPosts from "@/utils/getSortedPosts";
+import { noteNumbers } from "@/utils/notes";
+import { smartQuotes } from "@/utils/smartQuotes";
 
-const posts = await getCollection("blog");
+const posts = getSortedPosts(await getCollection("blog"));
+const numbers = noteNumbers(posts);
+const latest = posts[0];
+const notes = [...posts.filter((p) => p.data.featured), ...posts.filter((p) => !p.data.featured)].slice(
+  0,
+  SITE.postPerIndex
+);
 
-const sortedPosts = getSortedPosts(posts);
-// Show all posts or filter by featured
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-
-
+const heroPeaks = [
+  { cx: 1060, cy: 330, count: 24, r0: 16, dr: 24, seed: 0.6, sx: 1.4, sy: 0.95 },
+  { cx: 1440, cy: 790, count: 16, r0: 30, dr: 28, seed: 2.1, sx: 1.2, sy: 0.9 },
+  { cx: 160, cy: 40, count: 9, r0: 20, dr: 26, seed: 4.2, sx: 1.3, sy: 0.8 },
+];
+const route = "M -20 690 C 200 640, 400 720, 580 590 S 840 400, 1004 404 S 1240 250, 1460 170";
 ---
 
 <Layout description={SITE.desc}>
   <StructuredData type="WebSite" data={{}} />
   <StructuredData type="Person" data={{}} />
   <main id="main-content" data-layout="index">
-    <section id="hero" class="pt-6 pb-4">
-      <div class="flex flex-col sm:flex-row items-start gap-4">
-        <a href="/about" class="block mx-auto sm:mx-0 group">
-          <Image
-            src={avatarImage}
-            alt={SITE.author}
-            width={160}
-            height={160}
-            format="webp"
-            quality={85}
-            class="w-40 h-40 rounded-full object-cover flex-shrink-0 transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl"
-          />
-        </a>
-        <div class="flex-1 text-center sm:text-left">
-          <div class="flex items-center gap-2 justify-center sm:justify-start">
-            <h1 class="my-2 inline-block text-2xl font-bold sm:my-4 sm:text-3xl">
-              Hi, I'm <strong>Parth</strong>.
-            </h1>
-            <a
-              target="_blank"
-              href="/rss.xml"
-              class="inline-block"
-              aria-label="rss feed"
-              title="RSS Feed"
-            >
-              <IconRss
-                width={20}
-                height={20}
-                class="scale-125 stroke-accent stroke-3"
-              />
-              <span class="sr-only">RSS Feed</span>
-            </a>
-          </div>
-          <p class="mb-4">
-            Software Engineer based in <strong>Tucson, AZ</strong>.<br />
-            I build the backend systems behind Komatsu's autonomous mining fleet — real-time data services, AI-augmented developer tooling, and production-scale deployments serving <strong>200M+ users</strong>.<br />
-            Always open to conversations about backend systems, AI tooling, or hard infrastructure problems.
-          </p>
-          <div class="mt-4 flex flex-row items-center justify-center sm:justify-start gap-4">
-             {SOCIALS.filter((social) => social.active).length > 0 && <Socials />}
-             <a href="/about" class="text-accent underline-offset-4 hover:underline">More about me</a>
+    <!-- ===== Hero: live from the Sonoran desert ===== -->
+    <section class="relative isolate flex min-h-[720px] flex-col overflow-hidden border-b border-border lg:min-h-[760px]">
+      <div class="pointer-events-none absolute inset-y-0 right-0 -z-10 aspect-[1440/760] h-full" aria-hidden="true">
+        <Topo peaks={heroPeaks} width={1440} height={760} preserveAspectRatio="none" class="absolute inset-0 size-full">
+          <path d={route} fill="none" stroke="var(--contour-strong)" stroke-width="6" stroke-linecap="round" opacity="0.35"></path>
+          <path class="march" d={route} fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="2 10" stroke-linecap="round"></path>
+          <circle class="pulse" cx="1004" cy="404" r="10" fill="var(--accent)"></circle>
+          <circle cx="1004" cy="404" r="7" fill="var(--accent)" stroke="var(--background)" stroke-width="3"></circle>
+          <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--subtle)" letter-spacing="1">
+            <text x="1332" y="96">1,120 m</text>
+            <text x="1180" y="620">980 m</text>
+          </g>
+        </Topo>
+        <div class="absolute top-[56.3%] left-[71.4%] hidden w-[300px] flex-col gap-2.5 rounded-[14px] border border-border bg-surface px-[18px] py-4 shadow-[0_12px_32px_-16px_rgba(40,25,10,0.35)] lg:flex">
+          <span class="flex items-center gap-2 font-mono text-[11px] tracking-[0.1em] text-subtle">
+            <span class="size-2 rounded-full bg-live"></span>NOW ROUTING
+          </span>
+          <span class="font-display text-[26px] leading-[1.1]">{NOW.routing}</span>
+          <div class="grid grid-cols-2 gap-2 text-[13px]">
+            <span class="flex flex-col gap-0.5"><span class="font-mono text-[11px] text-subtle">STACK</span>{NOW.stack}</span>
+            <span class="flex flex-col gap-0.5"><span class="font-mono text-[11px] text-subtle">FLEET VALUE</span>{NOW.fleetValue}</span>
           </div>
         </div>
       </div>
+
+      <div class="wrap flex grow flex-col pt-14 pb-12 sm:pt-20 lg:pt-20 lg:pb-16">
+        <p class="rise flex items-center gap-2.5 font-mono text-[11px] tracking-[0.08em] text-subtle sm:text-[13px]">
+          <span class="size-2 shrink-0 rounded-full bg-live" aria-hidden="true"></span>
+          <span>LIVE FROM <span class="max-sm:hidden">{LOCATION.coords} — </span>{LOCATION.city.toUpperCase()}</span>
+        </p>
+        <h1 class="rise mt-6 font-display text-[clamp(6rem,12vw,11.5rem)] leading-[0.86] tracking-[-0.025em] sm:mt-7" style="animation-delay: 60ms">
+          Parth<br />Patel<span class="text-accent">.</span>
+        </h1>
+        <p class="rise mt-7 max-w-[700px] font-display text-[clamp(1.5rem,2.6vw,2.25rem)] leading-[1.2] italic sm:mt-8" style="animation-delay: 120ms">
+          I build the real-time systems behind an autonomous mining fleet — and write about building software in the age of agents.
+        </p>
+        <div class="rise mt-9 flex flex-wrap gap-3 sm:mt-10" style="animation-delay: 180ms">
+          <a href="#notes" class="flex h-[52px] items-center gap-2.5 rounded-full bg-foreground px-[26px] font-medium text-background transition-transform hover:-translate-y-0.5">
+            Read the field notes
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+          <a href="#route" class="flex h-[52px] items-center rounded-full border border-foreground px-[26px] font-medium transition-colors hover:bg-foreground hover:text-background">See the route</a>
+        </div>
+      </div>
+
+      <dl class="border-t border-border bg-muted/85 backdrop-blur-sm">
+        <div class="wrap grid grid-cols-2 gap-x-6 gap-y-5 py-6 lg:h-28 lg:grid-cols-4 lg:items-center lg:gap-8 lg:py-0">
+          <div class="flex flex-col gap-1.5">
+            <dt class="font-mono text-[11px] tracking-[0.12em] text-subtle">LOCAL TIME</dt>
+            <dd class="font-mono text-xl lg:text-[22px]"><span data-clock>--:--</span> <span class="text-sm text-subtle">{LOCATION.timezoneLabel}</span></dd>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <dt class="font-mono text-[11px] tracking-[0.12em] text-subtle">SHIPPED TO</dt>
+            <dd class="text-lg lg:text-xl">{NOW.shippedTo}</dd>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <dt class="font-mono text-[11px] tracking-[0.12em] text-subtle">CURRENTLY</dt>
+            <dd class="text-lg lg:text-xl">{NOW.currently}</dd>
+          </div>
+          {
+            latest && (
+              <div class="flex flex-col gap-1.5">
+                <dt class="font-mono text-[11px] tracking-[0.12em] text-subtle">LATEST NOTE</dt>
+                <dd class="text-lg lg:text-xl">
+                  <a href={getPath(latest.id, latest.filePath)} class="line-clamp-1 underline decoration-accent underline-offset-[5px] hover:text-accent">
+                    {smartQuotes(latest.data.title)}
+                  </a>
+                </dd>
+              </div>
+            )
+          }
+        </div>
+      </dl>
     </section>
 
+    <!-- ===== The route so far ===== -->
+    <section id="route" class="wrap scroll-mt-24 pt-24 sm:pt-32">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div class="flex flex-col gap-[18px]">
+          <span class="eyebrow text-accent">02 — The route so far</span>
+          <h2 class="font-display text-[clamp(3rem,6vw,4.75rem)] leading-none tracking-[-0.015em]">
+            From ocean eddies<br />to open-pit mines.
+          </h2>
+        </div>
+        <a href="/about" class="underline decoration-accent underline-offset-[5px] hover:text-accent">Full experience on About →</a>
+      </div>
 
+      <div class="relative mt-14">
+        <div class="absolute top-2 bottom-0 left-[7px] border-l-2 border-dashed border-contour-strong md:hidden" aria-hidden="true"></div>
+        <div class="absolute top-[7px] right-0 left-0 hidden border-t-2 border-dashed border-contour-strong md:block" aria-hidden="true"></div>
+        <div class="absolute top-[7px] left-0 hidden h-0.5 w-[calc((100%-4rem)*2/3+4rem+8px)] bg-accent md:block" aria-hidden="true"></div>
+        <ol class="relative grid gap-12 md:grid-cols-3 md:gap-8">
+          {
+            ROUTE.map((stop) => (
+              <li class="relative flex flex-col gap-2.5 pl-10 md:pt-12 md:pr-6 md:pl-0">
+                <span class="absolute top-0 left-0 flex size-4 items-center justify-center" aria-hidden="true">
+                  {stop.current && <span class="absolute size-4 animate-ping rounded-full bg-accent opacity-60 motion-reduce:animate-none" />}
+                  <span class:list={["relative size-4 rounded-full border-2", stop.current ? "border-accent bg-accent" : "border-foreground bg-background"]} />
+                </span>
+                <span class:list={["font-mono text-xs tracking-[0.1em] uppercase", stop.current ? "text-accent" : "text-subtle"]}>
+                  {stop.dates} · {stop.place}
+                </span>
+                <h3 class="font-display text-[34px] leading-[1.1]">{stop.company}</h3>
+                <span class="text-[15px] text-subtle">{stop.role}</span>
+                <span class="mt-5 font-display text-7xl leading-none text-accent">{stop.stat}</span>
+                <p class="leading-relaxed">{stop.statCaption}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
 
-    <Hr />
+    <!-- ===== Field notes ===== -->
+    <section id="notes" class="wrap scroll-mt-24 pt-24 sm:pt-32">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div class="flex flex-col gap-[18px]">
+          <span class="eyebrow text-accent">03 — Field notes</span>
+          <h2 class="font-display text-[clamp(3rem,6vw,4.75rem)] leading-none tracking-[-0.015em]">
+            Written from the<br />Painted Hills.
+          </h2>
+        </div>
+        <div class="flex gap-7">
+          <a href="/rss.xml" class="flex items-center gap-2 underline decoration-accent underline-offset-[5px] hover:text-accent">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1.2"></circle></svg>RSS
+          </a>
+          <a href="/posts" class="underline decoration-accent underline-offset-[5px] hover:text-accent">All notes →</a>
+        </div>
+      </div>
+      <ul class="mt-14 border-b border-border">
+        {notes.map((post, i) => <NoteRow post={post} number={numbers.get(post.id)} featured={i === 0 && post.data.featured} />)}
+      </ul>
+    </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <>
-          <section id="featured" class="pt-12 pb-6">
-            <h2 class="text-2xl font-semibold tracking-wide">Featured</h2>
-            <ul>
-              {featuredPosts.map((data, i) => (
-                <Card variant="h3" {...data} showImage={false} animIndex={i} />
-              ))}
-            </ul>
-          </section>
-          {recentPosts.length > 0 && <Hr />}
-        </>
-      )
-    }
-
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <ul>
-            {recentPosts.map(
-              (data, index) =>
-                index < SITE.postPerIndex && (
-                   <Card variant="h3" {...data} showImage={false} animIndex={index} />
-                )
-            )}
-          </ul>
-        </section>
-      )
-    }
-
-    <div class="my-8 text-center">
-      <LinkButton href="/posts">
-        All Posts
-        <IconArrowRight class="inline-block" />
-      </LinkButton>
-    </div>
+    <!-- ===== Recess ===== -->
+    <section id="recess" class="scroll-mt-24 px-3 pt-24 sm:px-6 sm:pt-32 lg:px-10">
+      <div data-theme="dark" class="mx-auto flex max-w-[1360px] flex-col gap-12 rounded-[28px] border border-border bg-surface px-6 py-14 text-foreground sm:px-12 lg:flex-row lg:items-center lg:justify-between lg:px-16 lg:py-20">
+        <div class="flex max-w-[520px] flex-col gap-5">
+          <span class="eyebrow text-accent">04 — Recess</span>
+          <h2 class="font-display text-[clamp(3rem,6vw,4.5rem)] leading-none tracking-[-0.015em]">Take a break.<br />Outrun the desert.</h2>
+          <p class="text-lg leading-relaxed text-subtle">
+            An endless runner I built from scratch. Dodge the cacti, chase the high score, then get back to reading.
+          </p>
+          <div class="mt-3 flex flex-wrap items-center gap-5">
+            <a href="/game" class="flex h-[52px] items-center gap-2.5 rounded-full bg-accent px-[26px] font-semibold text-on-accent transition-transform hover:-translate-y-0.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"></path></svg>Play in the browser
+            </a>
+            <a href={GAME_URL} target="_blank" rel="noopener noreferrer" class="font-mono text-[13px] underline-offset-[5px] hover:underline">
+              {GAME_URL.replace("https://", "")} ↗
+            </a>
+          </div>
+        </div>
+        <a href="/game" class="group relative block aspect-[600/340] w-full overflow-hidden rounded-[18px] border border-border lg:w-[600px]" aria-label="Play the endless runner">
+          <svg viewBox="0 0 600 340" class="size-full" aria-hidden="true" shape-rendering="crispEdges">
+            <rect width="600" height="340" fill="#2A211B"></rect>
+            <rect y="140" width="600" height="60" fill="#3A2A20"></rect>
+            <circle cx="440" cy="150" r="56" fill="#FF8A3D"></circle>
+            <rect y="176" width="600" height="8" fill="#2A211B"></rect>
+            <rect y="192" width="600" height="6" fill="#2A211B"></rect>
+            <polygon points="0,230 80,170 150,210 230,150 330,220 420,176 520,214 600,180 600,260 0,260" fill="#5B3A2A"></polygon>
+            <polygon points="0,250 110,214 210,244 320,200 430,246 540,222 600,236 600,260 0,260" fill="#7A4A32"></polygon>
+            <rect y="258" width="600" height="82" fill="#C98A5A"></rect>
+            <rect y="258" width="600" height="4" fill="#F1E9DC"></rect>
+            <g fill="#3F6B4A">
+              <rect x="358" y="206" width="14" height="52"></rect>
+              <rect x="344" y="222" width="8" height="18"></rect><rect x="344" y="232" width="14" height="8"></rect>
+              <rect x="378" y="214" width="8" height="18"></rect><rect x="372" y="226" width="14" height="8"></rect>
+              <rect x="500" y="226" width="10" height="32"></rect><rect x="514" y="234" width="6" height="12"></rect><rect x="510" y="240" width="10" height="6"></rect>
+            </g>
+            <g class="transition-transform duration-300 group-hover:-translate-y-6">
+              <rect x="120" y="196" width="26" height="30" fill="#F1E9DC"></rect>
+              <rect x="138" y="202" width="5" height="5" fill="#1A1714"></rect>
+              <rect x="124" y="226" width="7" height="14" fill="#F1E9DC"></rect><rect x="136" y="226" width="7" height="8" fill="#F1E9DC"></rect>
+            </g>
+            <rect x="84" y="244" width="22" height="4" fill="#C98A5A" opacity=".6"></rect>
+            <rect x="60" y="250" width="14" height="4" fill="#C98A5A" opacity=".4"></rect>
+          </svg>
+          <span class="absolute top-5 right-6 left-6 flex justify-between font-mono text-sm tracking-[0.1em] text-[#F1E9DC]">
+            <span>HI 000000</span><span>000000</span>
+          </span>
+          <span class="absolute right-0 bottom-6 left-0 text-center font-mono text-[13px] tracking-[0.14em] text-[#1A1714]">
+            <span class="blink">▶</span> CLICK TO PLAY
+          </span>
+        </a>
+      </div>
+    </section>
   </main>
-
 </Layout>
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset?.layout;
+    const indexLayout = (document.querySelector("#main-content") as HTMLElement)?.dataset?.layout;
     if (indexLayout) {
       sessionStorage.setItem("backUrl", "/");
     }

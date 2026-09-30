@@ -1,13 +1,15 @@
 ---
 import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
-import Card from "@/components/Card.astro";
+import NoteRow from "@/components/NoteRow.astro";
 import Pagination from "@/components/Pagination.astro";
 import { SITE } from "@/config";
 import Layout from "@/layouts/Layout.astro";
 import Main from "@/layouts/Main.astro";
 import getPostsByTag from "@/utils/getPostsByTag";
+import getSortedPosts from "@/utils/getSortedPosts";
 import getUniqueTags from "@/utils/getUniqueTags";
+import { noteNumbers } from "@/utils/notes";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const posts = await getCollection("blog");
@@ -27,23 +29,24 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 const params = Astro.params;
 const { tag } = params;
 const { page, tagName } = Astro.props;
+const numbers = noteNumbers(getSortedPosts(await getCollection("blog")));
 ---
 
 <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
   <Main
-    pageTitle={[`Tag:`, `${tagName}`]}
+    eyebrow="Field notes · Tag"
+    pageTitle={[`#`, `${tagName}`]}
     titleTransition={tag}
-    pageDesc={`All the articles with the tag "${tagName}".`}
+    pageDesc={`All the notes tagged “${tagName}”.`}
   >
-    <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
-    <ul>
-      {page.data.map((data) => <Card {...data} />)}
+    <ul class="border-b border-border">
+      {page.data.map((post) => <NoteRow post={post} number={numbers.get(post.id)} headingLevel="h2" />)}
     </ul>
   </Main>
 
   <Pagination {page} />
 
-  <div class="my-8 text-center">
-    <a href="/tags" class="underline hover:text-accent">All Tags -></a>
+  <div class="wrap my-10">
+    <a href="/tags" class="underline decoration-accent underline-offset-[5px] hover:text-accent">All tags →</a>
   </div>
 </Layout>

@@ -3,80 +3,101 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-/* Font definitions */
-@font-face {
-  font-family: "Atkinson";
-  src: url("/fonts/atkinson-regular.woff2") format("woff2"),
-       url("/fonts/atkinson-regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Atkinson";
-  src: url("/fonts/atkinson-bold.woff2") format("woff2"),
-       url("/fonts/atkinson-bold.woff") format("woff");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
+/*
+ * "Telemetry from the Sonoran desert"
+ * Day = sandstone + ocotillo orange, Night = desert after sundown.
+ * Any element with data-theme="dark" (e.g. the Recess band, the 404 map)
+ * re-scopes these tokens, so always-dark sections work in light mode too.
+ */
 :root,
-html[data-theme="light"] {
-  --background: #fdfdfd;
-  --bg-pattern: url('/assets/backgrounds/desert-sparse.png');
-  --bg-filter: none;
-  --foreground: #282728;
-  --accent: #006cac;
-  --muted: #e6e6e6;
-  --border: #ece9e9;
+[data-theme="light"] {
+  --background: #f2ebdf;
+  --surface: #faf6ef;
+  --muted: #ede4d6;
+  --foreground: #1c1915;
+  --subtle: #5f564c;
+  --border: #d9cebf;
+  --contour: #d6c9b6;
+  --contour-strong: #b7a58d;
+  --accent: #c2410c;
+  --accent-soft: #f4d9c6;
+  --on-accent: #fff7ee;
+  --live: #3f7a4e;
+  color-scheme: light;
 }
 
-html[data-theme="dark"] {
-  --background: #212737;
-  --bg-filter: invert(1) hue-rotate(180deg) brightness(0.9);
-  --foreground: #eaedf3;
-  --accent: #ff6b01;
-  --muted: #343f60bf;
-  --border: #ab4b08;
+[data-theme="dark"] {
+  --background: #14110e;
+  --surface: #1d1915;
+  --muted: #221d18;
+  --foreground: #f1e9dc;
+  --subtle: #a99d8d;
+  --border: #322b25;
+  --contour: #2a241f;
+  --contour-strong: #463c33;
+  --accent: #ff7a1a;
+  --accent-soft: #3a2416;
+  --on-accent: #14110e;
+  --live: #6fbf7f;
+  color-scheme: dark;
 }
 
-@theme {
+/* `inline` so utilities read the variables where they are used — this is what
+   lets a data-theme="dark" section inside a light page actually go dark. */
+@theme inline {
   --color-*: initial;
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
+  --color-surface: var(--surface);
   --color-muted: var(--muted);
+  --color-foreground: var(--foreground);
+  --color-subtle: var(--subtle);
   --color-border: var(--border);
-  --image-bg-pattern: var(--bg-pattern);
-  --image-bg-filter: var(--bg-filter);
+  --color-contour: var(--contour);
+  --color-contour-strong: var(--contour-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-live: var(--live);
+
+  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Page gutter + max width shared by every section */
+@utility wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 40rem) {
+    padding-inline: 2.5rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 5rem;
+  }
+}
+
+/* Small mono label used for eyebrows, meta rows and telemetry */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 @layer base {
   * {
     @apply border-border outline-accent/75;
     scrollbar-width: auto;
-    scrollbar-color: var(--color-muted) transparent;
+    scrollbar-color: var(--border) transparent;
   }
 
-  /* View Transitions API for smooth theme switching (Safari 18+, Chrome 111+) */
+  /* View Transitions API for smooth theme switching */
   :root {
     view-transition-name: root;
   }
 
-  /* Apply to html element as well for better compatibility */
-  html {
-    view-transition-name: root;
-  }
-
-  /* Ensure smooth transition between light and dark themes */
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: 0.25s;
-  }
-
-  /* Customize the transition style */
   ::view-transition-old(root) {
     animation: fade-out 0.25s ease-out;
   }
@@ -86,52 +107,28 @@ html[data-theme="dark"] {
   }
 
   @keyframes fade-out {
-    from {
-      opacity: 1;
-    }
-
-    to {
-      opacity: 0;
-    }
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 
   @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   html {
     @apply overflow-y-scroll scroll-smooth;
+    background-color: var(--background);
   }
 
   body {
-    @apply flex min-h-svh flex-col font-mono text-foreground selection:bg-accent/75 selection:text-background relative;
-    background-color: var(--color-background);
-  }
-
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -50;
-    background-image: var(--image-bg-pattern);
-    background-repeat: repeat;
-    background-size: 800px;
-    filter: var(--image-bg-filter);
-    pointer-events: none;
+    @apply relative flex min-h-svh flex-col bg-background font-sans text-foreground antialiased selection:bg-accent selection:text-on-accent;
+    transition: background-color 0.3s ease;
   }
 
   a,
   button {
-    @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
+    @apply outline-offset-2 outline-accent focus-visible:outline-2 focus-visible:outline-dashed;
   }
 
   button:not(:disabled),
@@ -139,30 +136,66 @@ html[data-theme="dark"] {
     cursor: pointer;
   }
 
-  section,
-  footer {
-    @apply mx-auto max-w-3xl px-4;
+  kbd {
+    @apply rounded-full border border-border px-2 py-0.5 font-mono text-xs text-foreground;
   }
 }
 
-.active-nav {
-  @apply underline decoration-wavy decoration-2 underline-offset-4;
+/* ===== Motion ===== */
+@keyframes pulse-ring {
+  0% { transform: scale(0.5); opacity: 0.7; }
+  100% { transform: scale(2.6); opacity: 0; }
 }
 
-/* Staggered card entry animation */
-@keyframes card-enter {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@keyframes march {
+  to { stroke-dashoffset: -240; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+
+.march {
+  animation: march 9s linear infinite;
+}
+
+.blink {
+  animation: blink 1.4s steps(2) infinite;
+}
+
+.rise {
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse,
+  .march,
+  .blink,
+  .rise {
+    animation: none;
   }
 }
 
-.card-animate {
-  animation: card-enter 0.4s ease-out both;
+/* Any photo, tinted into the site palette */
+.duotone {
+  background: var(--accent);
+}
+
+.duotone img {
+  filter: grayscale(1) contrast(1.15) brightness(1.05);
+  mix-blend-mode: multiply;
 }
 
 /* Mobile nav slide transition */
@@ -177,40 +210,8 @@ html[data-theme="dark"] {
 }
 
 #menu-items.menu-expanded {
-  max-height: 20rem;
+  max-height: 24rem;
   opacity: 1;
-}
-
-/* Experience timeline connector */
-.timeline-entry {
-  position: relative;
-  padding-left: 1.5rem;
-}
-
-.timeline-entry::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.5rem;
-  bottom: -2rem;
-  width: 2px;
-  background: var(--accent);
-  opacity: 0.3;
-}
-
-.timeline-entry:last-child::before {
-  bottom: 0.5rem;
-}
-
-.timeline-entry::after {
-  content: "";
-  position: absolute;
-  left: -3px;
-  top: 0.5rem;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
 }
 
 /* Game iframe loading skeleton */
@@ -233,7 +234,7 @@ html[data-theme="dark"] {
 .game-skeleton-pulse {
   width: 3rem;
   height: 3rem;
-  border: 3px solid var(--muted);
+  border: 3px solid var(--border);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: skeleton-spin 0.8s linear infinite;

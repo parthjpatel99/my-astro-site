@@ -1,27 +1,57 @@
 ---
-import Hr from "./Hr.astro";
-import Socials from "./Socials.astro";
-import { SITE } from "@/config";
+import { SITE, SOCIALS } from "@/config";
+import { LOCATION } from "@/data/profile";
 
-export interface Props {
-  noMarginTop?: boolean;
-}
-
-const { noMarginTop = false } = Astro.props;
+const email = SOCIALS.find((s) => s.icon === "mail")?.href.replace("mailto:", "");
+const links = [
+  ...SOCIALS.filter((s) => s.active && s.icon !== "mail").map((s) => ({ label: s.name === "Github" ? "GitHub" : s.name, href: s.href, title: s.linkTitle })),
+  { label: "RSS feed", href: "/rss.xml", title: `Subscribe to ${SITE.title} via RSS` },
+];
 ---
 
-<footer class:list={["w-full", { "mt-auto": !noMarginTop }]}>
-  <Hr noPadding />
-  <div
-    class="mx-auto max-w-3xl px-4 flex flex-col items-center justify-between py-6 sm:flex-row sm:py-4"
-  >
-    <div class="my-2 flex flex-col items-center sm:flex-row text-sm sm:text-base">
-      <a href="https://github.com/steipete/steipete.me" target="_blank" rel="noopener noreferrer" class="hover:text-accent">
-        &copy; {new Date().getFullYear()} {SITE.author} · Code: MIT | Adapted from Peter Steinberger
-      </a>
+<footer class="wrap mt-auto pt-24 pb-10 sm:pt-32">
+  <div class="flex flex-col gap-12 lg:flex-row lg:items-end lg:justify-between">
+    <div class="flex flex-col gap-5">
+      <span class="eyebrow text-accent">Radio check</span>
+      <h2 class="font-display text-[clamp(4rem,10vw,8rem)] leading-[0.95] tracking-[-0.02em]">Say hello.</h2>
+      {
+        email && (
+          <a
+            href={`mailto:${email}`}
+            class="font-display text-[clamp(1.75rem,4vw,2.75rem)] break-all text-accent italic underline decoration-1 underline-offset-8 hover:opacity-80"
+          >
+            {email}
+          </a>
+        )
+      }
+      <p class="max-w-xl text-lg leading-relaxed text-subtle">
+        Always up for a conversation about backend systems, AI tooling or hard infrastructure problems.
+      </p>
     </div>
-    <div class="flex-shrink-0">
-      <Socials centered />
-    </div>
+    <ul class="flex w-full flex-col lg:w-80">
+      {
+        links.map(({ label, href, title }) => (
+          <li>
+            <a
+              href={href}
+              title={title}
+              class="group flex justify-between border-b border-border py-[18px] text-xl transition-colors hover:text-accent"
+              {...(href.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
+            >
+              {label}
+              <span class="text-subtle transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <div class="mt-20 flex flex-col gap-2 border-t border-border pt-6 font-mono text-xs tracking-[0.08em] text-subtle uppercase sm:flex-row sm:justify-between">
+    <span>© {new Date().getFullYear()} {SITE.author}</span>
+    <span>
+      Built with Astro · Hosted on Vercel ·
+      <a href="https://github.com/steipete/steipete.me" target="_blank" rel="noopener noreferrer" class="underline-offset-4 hover:text-accent hover:underline">Adapted from Peter Steinberger</a>
+    </span>
+    <span>Tucson <span data-clock>--:--</span> {LOCATION.timezoneLabel}</span>
   </div>
 </footer>

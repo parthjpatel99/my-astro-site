@@ -1,21 +1,20 @@
 ---
 import { type CollectionEntry, render } from "astro:content";
-import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
-import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
-import BackButton from "@/components/BackButton.astro";
-import Datetime from "@/components/Datetime.astro";
-import EditPost from "@/components/EditPost.astro";
-import Footer from "@/components/Footer.astro";
-import Header from "@/components/Header.astro";
-
-import ShareLinks from "@/components/ShareLinks.astro";
+import { Image } from "astro:assets";
+import avatarImage from "@/assets/images/parth-avatar.jpg";
+import IconBlueSky from "@/assets/icons/IconBlueSky.svg";
+import IconBrandX from "@/assets/icons/IconBrandX.svg";
+import IconLinkedin from "@/assets/icons/IconLinkedin.svg";
 import StructuredData from "@/components/StructuredData.astro";
-import Tag from "@/components/Tag.astro";
+import { SHARE_LINKS } from "@/constants";
 import { SITE } from "@/config";
 import Layout from "@/layouts/Layout.astro";
 import { getPath } from "@/utils/getPath";
+import { noteDate, noteMinutes, noteNumbers } from "@/utils/notes";
 import { calculateReadingTime } from "@/utils/readingTime";
 import { slugifyStr } from "@/utils/slugify";
+import { smartQuotes } from "@/utils/smartQuotes";
+import { elevationProfile } from "@/utils/topo";
 
 export interface Props {
   post: CollectionEntry<"blog">;
@@ -32,14 +31,15 @@ const {
   canonicalURL,
   pubDatetime,
   modDatetime,
-  timezone,
   tags,
   hideEditPost,
   heroImage,
+  tldr,
 } = post.data;
 
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const readingTime = calculateReadingTime(post.body ?? "");
+const minutes = parseInt(readingTime, 10) || 1;
 
 let ogImageUrl: string | undefined;
 
@@ -75,25 +75,29 @@ const layoutProps = {
   scrollSmooth: true,
 };
 
-/* ========== Prev/Next Posts ========== */
+/* ========== Field-note numbering + neighbours ========== */
+const numbers = noteNumbers(posts);
+const number = numbers.get(post.id) ?? "01";
+const index = posts.findIndex((p) => p.id === post.id);
+// `posts` is newest first
+const newer = index > 0 ? posts[index - 1] : null;
+const older = index >= 0 && index < posts.length - 1 ? posts[index + 1] : null;
 
-const allPosts = posts.map(({ data: { title }, id }) => ({
-  slug: id,
-  title,
-}));
+const toc = headings.filter((h) => h.depth === 2 && h.slug !== "table-of-contents");
+const summit = toc.at(-1)?.text;
+const wordCount = (post.body ?? "").split(/\s+/).filter(Boolean).length;
+const editHref = `${SITE.editPost.url}${post.filePath}`;
+const showEdit = SITE.editPost.enabled && !hideEditPost;
 
-const currentPostIndex = allPosts.findIndex((a) => a.slug === post.id);
-
-const prevPost = currentPostIndex !== 0 ? allPosts[currentPostIndex - 1] : null;
-const nextPost = currentPostIndex !== allPosts.length ? allPosts[currentPostIndex + 1] : null;
-
-// Calculate word count for structured data
-const wordCount = (post.body ?? "").split(/\s+/).length;
+const shareURL = new URL(Astro.url.pathname, SITE.website).href;
+const shareIcons = { twitter: IconBrandX, bluesky: IconBlueSky, linkedin: IconLinkedin };
+const shares = SHARE_LINKS.filter((s) => s.icon in shareIcons);
+const profile = elevationProfile(post.id);
 ---
 
 <Layout {...layoutProps}>
-  <StructuredData 
-    type="BlogPosting" 
+  <StructuredData
+    type="BlogPosting"
     data={{
       title,
       description,
@@ -104,187 +108,308 @@ const wordCount = (post.body ?? "").split(/\s+/).length;
       ogImage,
       tags,
       wordCount,
-      readingTime
-    }} 
+      readingTime,
+    }}
   />
 
-  <BackButton />
-  <main
-    id="main-content"
-    class:list={[
-      "mx-auto w-full max-w-3xl px-4 pb-12",
-      { "mt-8": !SITE.showBackButton },
-    ]}
-    data-pagefind-body
+  <!-- Reading progress as an elevation profile -->
+  <div
+    id="elevation"
+    data-minutes={minutes}
+    class="sticky top-16 z-30 h-10 overflow-hidden border-b border-border bg-muted sm:top-[72px] sm:h-12"
+    style="--p: 0"
+    aria-hidden="true"
+    data-pagefind-ignore
   >
-    <h1
-      transition:name={slugifyStr(title)}
-      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
-    >
-      {title}
-    </h1>
-    <div class="flex items-center justify-between gap-4 mt-2 mb-6">
-      <div class="flex items-center gap-3">
-        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-        {
-          readingTime && (
-            <>
-              <span class="text-foreground/30">•</span>
-              <span class="text-sm text-foreground/60">{readingTime}</span>
-            </>
-          )
-        }
+    <svg viewBox="0 0 1440 48" preserveAspectRatio="none" class="absolute inset-0 size-full">
+      <path d={profile} fill="var(--border)"></path>
+    </svg>
+    <svg viewBox="0 0 1440 48" preserveAspectRatio="none" class="elevation-climbed absolute inset-0 size-full">
+      <path d={profile} fill="var(--accent)" opacity="0.85"></path>
+    </svg>
+    <div class="elevation-marker absolute inset-y-0 w-px bg-foreground"></div>
+    <span data-elev-label class="elevation-label absolute top-1.5 bg-muted px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap sm:text-[11px]">
+      0% CLIMBED · ~{minutes} MIN LEFT
+    </span>
+    {
+      summit && (
+        <span data-elev-summit class="absolute top-1/2 right-5 hidden -translate-y-1/2 font-mono text-[11px] tracking-[0.1em] text-subtle uppercase transition-opacity lg:right-20 lg:block">
+          Summit · {summit}
+        </span>
+      )
+    }
+  </div>
+
+  <main id="main-content" class="wrap pt-12 sm:pt-20" data-pagefind-body>
+    <div class="grid gap-y-10 lg:grid-cols-[180px_minmax(0,680px)_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-14 xl:grid-cols-[220px_680px_260px] xl:gap-x-[60px]">
+      <div class="hidden flex-col gap-2 lg:flex" data-pagefind-ignore>
+        <span class="eyebrow text-xs text-subtle">Field note</span>
+        <span class="font-display text-[140px] leading-[0.8] text-accent">{number}</span>
       </div>
-      <EditPost class="max-sm:hidden" {hideEditPost} {post} />
-    </div>
-    <article id="article" class="mx-auto prose mt-6 max-w-3xl">
+
+      <header class="flex flex-col gap-6 lg:col-span-2">
+        <nav aria-label="Breadcrumb" class="flex flex-wrap gap-2.5 font-mono text-[13px] tracking-[0.06em] text-subtle" data-pagefind-ignore>
+          <a href="/" class="hover:text-accent">Home</a><span aria-hidden="true">/</span>
+          <a href="/posts" class="hover:text-accent">Field notes</a><span aria-hidden="true">/</span>
+          <span class="text-foreground" aria-current="page">No. {number}</span>
+        </nav>
+        <h1
+          transition:name={slugifyStr(title)}
+          class="font-display text-[clamp(3rem,7vw,6rem)] leading-[0.98] tracking-[-0.02em] text-balance"
+        >
+          {smartQuotes(title)}
+        </h1>
+        <p class="max-w-[820px] font-display text-[clamp(1.375rem,2.4vw,1.875rem)] leading-[1.3] text-foreground/80 italic">
+          {smartQuotes(description)}
+        </p>
+        <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-4">
+          <div class="flex items-center gap-4">
+          <Image src={avatarImage} alt="" width={44} height={44} densities={[1, 2]} format="webp" loading="eager" class="size-11 shrink-0 rounded-full object-cover" />
+          <div class="flex flex-col gap-0.5">
+            <span class="text-[15px] font-medium">{author}</span>
+            <span class="font-mono text-xs tracking-[0.06em] text-subtle">
+              <time datetime={pubDatetime.toISOString()}>{noteDate(post)}</time>
+              {modDatetime && modDatetime > pubDatetime && <> · UPDATED</>} · {noteMinutes(post)} READ · {wordCount.toLocaleString("en-US")} WORDS
+            </span>
+          </div>
+          </div>
+          <ul class="flex flex-wrap gap-2 sm:ml-auto" aria-label="Tags">
+            {
+              tags.map((tag) => (
+                <li>
+                  <a href={`/tags/${slugifyStr(tag)}`} class="block rounded-full border border-border px-3 py-1.5 font-mono text-xs transition-colors hover:border-accent hover:text-accent">
+                    {tag}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </header>
+
       {
         heroImage && (
-          <img
-            src={heroImage}
-            alt=""
-            class="mb-8 aspect-video w-full rounded-md object-cover"
-            loading="lazy"
-          />
-        )
-      }
-      <Content />
-    </article>
-
-
-
-    <hr class="my-8 border-dashed" />
-
-    <EditPost class="sm:hidden" {hideEditPost} {post} />
-
-    <ul class="mt-4 mb-8 sm:my-8">
-      {tags.map((tag) => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
-    </ul>
-
-    <div
-      class="flex flex-col items-center justify-between gap-6 sm:flex-row sm:items-end sm:gap-4"
-    >
-      <ShareLinks />
-
-      <button
-        id="back-to-top"
-        class="focus-outline py-1 whitespace-nowrap hover:opacity-75"
-      >
-        <IconChevronLeft class="inline-block rotate-90" />
-        <span>Back to Top</span>
-      </button>
-    </div>
-
-    <hr class="my-6 border-dashed" />
-
-    <!-- Previous/Next Post Buttons -->
-    <div 
-      data-pagefind-ignore 
-      class="flex flex-col sm:flex-row justify-between gap-6"
-      data-prev-url={prevPost ? `/posts/${prevPost.slug}` : ''}
-      data-next-url={nextPost ? `/posts/${nextPost.slug}` : ''}
-    >
-      {
-        prevPost && (
-          <a
-            href={`/posts/${prevPost.slug}`}
-            class="flex gap-2 hover:opacity-75 items-start"
-            id="prev-post-link"
-          >
-            <IconChevronLeft class="inline-block flex-shrink-0 mt-0.5" />
-            <div class="min-w-0">
-              <span class="block text-sm text-foreground/70">Previous Post</span>
-              <div class="text-accent/85">{prevPost.title}</div>
+          <figure class="lg:col-span-2 lg:col-start-2">
+            <div class="duotone aspect-[16/9] overflow-hidden rounded-[20px] sm:aspect-[1000/460]">
+              <img src={heroImage} alt="" class="size-full object-cover" fetchpriority="high" />
             </div>
-          </a>
+          </figure>
         )
       }
-      {
-        nextPost && (
-          <a
-            href={`/posts/${nextPost.slug}`}
-            class="flex gap-2 hover:opacity-75 items-start justify-end text-right ml-auto"
-            id="next-post-link"
+
+      <aside class="hidden lg:block" data-pagefind-ignore>
+        <div class="sticky top-[150px] flex flex-col gap-5">
+          {
+            toc.length > 0 && (
+              <>
+                <span class="eyebrow text-xs text-subtle">On this note</span>
+                <ol class="flex flex-col gap-3.5 text-[15px] leading-snug" id="toc">
+                  {toc.map((h, i) => (
+                    <li>
+                      <a href={`#${h.slug}`} data-toc={h.slug} class="toc-link flex gap-3 text-subtle transition-colors hover:text-foreground">
+                        <span class="pt-0.5 font-mono text-xs">{String(i + 1).padStart(2, "0")}</span>
+                        <span>{h.text}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+                <div class="h-px bg-border" />
+              </>
+            )
+          }
+          {
+            showEdit && (
+              <a href={editHref} target="_blank" rel="noopener noreferrer" class="text-sm text-subtle underline-offset-4 hover:text-accent hover:underline">
+                {SITE.editPost.text} ↗
+              </a>
+            )
+          }
+        </div>
+      </aside>
+
+      <div class="min-w-0">
+        <article id="article" class="prose">
+          <Content />
+        </article>
+
+        <div class="mt-16 flex flex-wrap items-center gap-3 border-t border-border pt-7" data-pagefind-ignore>
+          <span class="eyebrow grow text-xs text-subtle">Share this note</span>
+          {
+            shares.map((s) => {
+              const Icon = shareIcons[s.icon as keyof typeof shareIcons];
+              return (
+                <a
+                  href={`${s.href}${shareURL}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={s.linkTitle}
+                  class="flex size-11 items-center justify-center rounded-full border border-border bg-surface transition-colors hover:border-accent hover:text-accent"
+                >
+                  <Icon class="size-[18px] fill-transparent stroke-current stroke-2" aria-hidden="true" />
+                  <span class="sr-only">{s.linkTitle}</span>
+                </a>
+              );
+            })
+          }
+          <button
+            type="button"
+            id="copy-link"
+            data-url={shareURL}
+            class="flex h-11 items-center gap-2 rounded-full bg-foreground px-[18px] text-sm text-background transition-transform hover:-translate-y-0.5"
           >
-            <div class="min-w-0">
-              <span class="block text-sm text-foreground/70">Next Post</span>
-              <div class="text-accent/85">{nextPost.title}</div>
-            </div>
-            <IconChevronRight class="inline-block flex-shrink-0 mt-0.5" />
-          </a>
-        )
-      }
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>
+            <span data-copy-label>Copy link</span>
+          </button>
+        </div>
+
+        <nav
+          aria-label="More field notes"
+          class="mt-10 grid gap-4 sm:grid-cols-2"
+          data-pagefind-ignore
+          data-prev-url={newer ? getPath(newer.id, newer.filePath) : ""}
+          data-next-url={older ? getPath(older.id, older.filePath) : ""}
+        >
+          {
+            [
+              { p: older, label: "Older note", align: "" },
+              { p: newer, label: "Newer note", align: "sm:col-start-2 sm:text-right" },
+            ].map(
+              ({ p, label, align }) =>
+                p && (
+                  <a
+                    href={getPath(p.id, p.filePath)}
+                    class:list={["group flex flex-col gap-2.5 rounded-[20px] border border-border bg-surface p-6 transition-colors hover:border-accent", align]}
+                  >
+                    <span class="eyebrow text-xs text-accent">
+                      {label} · No. {numbers.get(p.id)}
+                    </span>
+                    <span class="font-display text-[28px] leading-[1.1] group-hover:text-accent">{smartQuotes(p.data.title)}</span>
+                    <span class="text-[15px] text-subtle">{calculateReadingTime(p.body ?? "")}</span>
+                  </a>
+                )
+            )
+          }
+        </nav>
+      </div>
+
+      <aside class="hidden lg:block" data-pagefind-ignore>
+        <div class="sticky top-[150px] flex flex-col gap-7">
+          {
+            tldr && (
+              <div data-theme="dark" class="flex flex-col gap-2.5 rounded-2xl bg-background p-5 text-foreground">
+                <span class="font-mono text-[11px] tracking-[0.12em] text-accent">THE SHORT VERSION</span>
+                <span class="font-display text-2xl leading-[1.2]">{tldr}</span>
+              </div>
+            )
+          }
+          <div class="flex flex-col gap-2 text-sm text-subtle">
+            <span class="font-mono text-xs tracking-[0.1em]">KEYBOARD</span>
+            <span><kbd>J</kbd> / <kbd>K</kbd> older / newer note</span>
+            <span><kbd data-mod-key>⌘K</kbd> jump anywhere</span>
+          </div>
+        </div>
+      </aside>
     </div>
   </main>
-
 </Layout>
 
+<style>
+  #elevation .elevation-climbed {
+    clip-path: inset(0 calc(100% - var(--p) * 1%) 0 0);
+  }
+  #elevation .elevation-marker {
+    left: calc(var(--p) * 1%);
+  }
+  #elevation .elevation-label {
+    left: min(calc(var(--p) * 1% + 12px), calc(100% - 15rem));
+  }
+  .toc-link[aria-current="true"] {
+    color: var(--accent);
+    font-weight: 500;
+  }
+</style>
+
 <script is:inline data-astro-rerun>
-  /** Create a progress indicator
-   *  at the top */
-  function createProgressBar() {
-    // Create the main container div
-    const progressContainer = document.createElement("div");
-    progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+  /** Reading progress drawn as an elevation profile */
+  function setupElevation() {
+    const bar = document.getElementById("elevation");
+    const article = document.getElementById("article");
+    if (!bar || !article) return;
+    const label = bar.querySelector("[data-elev-label]");
+    const summit = bar.querySelector("[data-elev-summit]");
+    const total = Number(bar.dataset.minutes) || 1;
+    let ticking = false;
 
-    // Create the progress bar div
-    const progressBar = document.createElement("div");
-    progressBar.className = "progress-bar h-1 w-0 bg-accent";
-    progressBar.id = "myBar";
-
-    // Append the progress bar to the progress container
-    progressContainer.appendChild(progressBar);
-
-    // Append the progress container to the document body or any other desired parent element
-    document.body.appendChild(progressContainer);
-  }
-  createProgressBar();
-
-  /** Update the progress bar
-   *  when user scrolls */
-  function updateScrollProgress() {
-    document.addEventListener("scroll", () => {
-      const winScroll =
-        document.body.scrollTop || document.documentElement.scrollTop;
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      if (document) {
-        const myBar = document.getElementById("myBar");
-        if (myBar) {
-          myBar.style.width = scrolled + "%";
-        }
+    const update = () => {
+      ticking = false;
+      const rect = article.getBoundingClientRect();
+      const travelled = window.innerHeight * 0.5 - rect.top;
+      const p = Math.max(0, Math.min(1, travelled / rect.height));
+      const pct = Math.round(p * 100);
+      bar.style.setProperty("--p", String(pct));
+      if (label) {
+        label.textContent =
+          pct >= 100 ? "SUMMIT REACHED" : `${pct}% CLIMBED · ~${Math.max(1, Math.ceil(total * (1 - p)))} MIN LEFT`;
       }
-    });
-  }
-  updateScrollProgress();
+      if (summit) summit.style.opacity = pct > 55 ? "0" : "1";
+    };
 
-  /** Attaches links to headings in the document,
-   *  allowing sharing of sections easily */
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    document.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    document.addEventListener("astro:before-swap", () => document.removeEventListener("scroll", onScroll), { once: true });
+    update();
+  }
+  setupElevation();
+
+  /** Highlight the section being read in the table of contents */
+  function setupTocSpy() {
+    const links = Array.from(document.querySelectorAll("[data-toc]"));
+    if (!links.length) return;
+    const headings = links.map((l) => document.getElementById(l.dataset.toc)).filter(Boolean);
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const line = window.innerHeight * 0.35;
+      let active = "";
+      for (const h of headings) {
+        if (h.getBoundingClientRect().top <= line) active = h.id;
+      }
+      links.forEach((l) => l.setAttribute("aria-current", String(l.dataset.toc === active)));
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    document.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("astro:before-swap", () => document.removeEventListener("scroll", onScroll), { once: true });
+    update();
+  }
+  setupTocSpy();
+
+  /** Attaches links to headings in the document, allowing sharing of sections easily */
   function addHeadingLinks() {
-    const headings = Array.from(
-      document.querySelectorAll("h2, h3, h4, h5, h6"),
-    );
+    const headings = Array.from(document.querySelectorAll("#article h2, #article h3, #article h4"));
     for (const heading of headings) {
       heading.classList.add("group");
       const link = document.createElement("a");
-      link.className =
-        "heading-link ml-2 opacity-0 group-hover:opacity-100 focus:opacity-100";
+      link.className = "heading-link ml-1 font-mono text-base text-subtle no-underline opacity-0 group-hover:opacity-100 focus:opacity-100";
       link.href = "#" + heading.id;
-
-      const span = document.createElement("span");
-      span.ariaHidden = "true";
-      span.innerText = "#";
-      link.appendChild(span);
+      link.setAttribute("aria-label", "Link to this section");
+      link.textContent = "#";
       heading.appendChild(link);
     }
   }
   addHeadingLinks();
 
-  /** Attaches copy buttons to code blocks in the document,
-   * allowing users to copy code easily. */
+  /** Attaches copy buttons to code blocks in the document */
   function attachCopyButtons() {
     const copyButtonLabel = "Copy";
     const codeBlocks = Array.from(document.querySelectorAll("pre"));
@@ -295,104 +420,80 @@ const wordCount = (post.body ?? "").split(/\s+/).length;
 
       const copyButton = document.createElement("button");
       copyButton.className =
-        "copy-code absolute right-3 -top-3 rounded bg-muted px-2 py-1 text-xs leading-4 text-foreground font-medium";
-      copyButton.innerHTML = copyButtonLabel;
+        "copy-code absolute right-3 -top-3 rounded-full border border-border bg-surface px-3 py-1 font-mono text-xs leading-4 text-foreground";
+      copyButton.textContent = copyButtonLabel;
       codeBlock.setAttribute("tabindex", "0");
       codeBlock.appendChild(copyButton);
 
-      // wrap codebock with relative parent element
       codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
       wrapper.appendChild(codeBlock);
 
       copyButton.addEventListener("click", async () => {
-        await copyCode(codeBlock, copyButton);
+        const text = codeBlock.querySelector("code")?.innerText;
+        await navigator.clipboard.writeText(text ?? "");
+        copyButton.textContent = "Copied";
+        setTimeout(() => (copyButton.textContent = copyButtonLabel), 700);
       });
-    }
-
-    async function copyCode(block, button) {
-      const code = block.querySelector("code");
-      const text = code?.innerText;
-
-      await navigator.clipboard.writeText(text ?? "");
-
-      // visual feedback that task is completed
-      button.innerText = "Copied";
-
-      setTimeout(() => {
-        button.innerText = copyButtonLabel;
-      }, 700);
     }
   }
   attachCopyButtons();
 
-  /** Scrolls the document to the top when
-   * the "Back to Top" button is clicked. */
-  function backToTop() {
-    document.querySelector("#back-to-top")?.addEventListener("click", () => {
-      document.body.scrollTop = 0; // For Safari
-      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  /** Copy the post URL */
+  function setupCopyLink() {
+    const btn = document.getElementById("copy-link");
+    const label = btn?.querySelector("[data-copy-label]");
+    btn?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.url || location.href);
+        if (label) label.textContent = "Copied";
+      } catch {
+        if (label) label.textContent = "Copy failed";
+      }
+      setTimeout(() => label && (label.textContent = "Copy link"), 1400);
     });
   }
-  backToTop();
+  setupCopyLink();
 
   /* Go to page start after page swap */
-  document.addEventListener("astro:after-swap", () =>
-    window.scrollTo({ left: 0, top: 0, behavior: "instant" }),
-  );
+  document.addEventListener("astro:after-swap", () => window.scrollTo({ left: 0, top: 0, behavior: "instant" }));
 
   /** Add lazy loading to all images in the article */
   function addLazyLoading() {
     const article = document.querySelector("#article");
     if (!article) return;
-    
-    const images = article.querySelectorAll("img:not([loading])");
-    images.forEach((img) => {
-      img.setAttribute("loading", "lazy");
-    });
+    article.querySelectorAll("img:not([loading])").forEach((img) => img.setAttribute("loading", "lazy"));
   }
   addLazyLoading();
 
-  /** Keyboard navigation for posts */
+  /** Keyboard navigation for posts: J = older, K = newer */
   function setupKeyboardNavigation() {
-    const navContainer = document.querySelector('[data-prev-url]');
+    const navContainer = document.querySelector("[data-prev-url]");
     if (!navContainer) return;
-    
-    const prevUrl = navContainer.getAttribute('data-prev-url');
-    const nextUrl = navContainer.getAttribute('data-next-url');
-    
-    document.addEventListener('keydown', (e) => {
-      // Ignore if user is typing in an input, textarea, or contenteditable
-      if (e.target.matches('input, textarea, [contenteditable="true"]')) return;
-      
-      // J key for next post
-      if (e.key === 'j' && nextUrl) {
-        window.location.href = nextUrl;
-      }
-      // K key for previous post
-      else if (e.key === 'k' && prevUrl) {
-        window.location.href = prevUrl;
-      }
-    });
+
+    const prevUrl = navContainer.getAttribute("data-prev-url");
+    const nextUrl = navContainer.getAttribute("data-next-url");
+
+    const onKey = (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.target.closest && e.target.closest('input, textarea, [contenteditable="true"], dialog')) return;
+      if (e.key === "j" && nextUrl) window.location.href = nextUrl;
+      else if (e.key === "k" && prevUrl) window.location.href = prevUrl;
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("astro:before-swap", () => document.removeEventListener("keydown", onKey), { once: true });
   }
   setupKeyboardNavigation();
 
-  /** Process YouTube and Twitter embeds */
+  /** Process YouTube embeds written as {% youtube <id|url> %} */
   function processEmbeds() {
     const article = document.querySelector("#article");
     if (!article) return;
 
-    // Look for YouTube embeds
-    const youtubeEmbedRegex = /\{% youtube (https:\/\/[^\s]+|[a-zA-Z0-9_-]+) %\}/g;
-    
-    let foundYoutubeEmbeds = false;
-    
-    // Helper to extract a YouTube video ID from various URL formats
     const extractYouTubeId = (input) => {
       let videoId = input;
       try {
         if (videoId.includes("youtube.com/watch")) {
-          const url = new URL(videoId);
-          videoId = url.searchParams.get("v") || "";
+          videoId = new URL(videoId).searchParams.get("v") || "";
         } else if (videoId.includes("youtu.be/")) {
           videoId = videoId.split("youtu.be/")[1]?.split("?")[0] || "";
         } else if (videoId.includes("youtube.com/embed/")) {
@@ -401,96 +502,29 @@ const wordCount = (post.body ?? "").split(/\s+/).length;
       } catch (_) {
         // If URL parsing fails, fall back to the raw input
       }
-      return videoId;
+      return videoId.replace(/[^a-zA-Z0-9_-]/g, "");
     };
 
-    // 1) Pre-pass: replace whole-paragraph shortcodes (most common case)
-    const pNodes = article.querySelectorAll("p");
-    pNodes.forEach((p) => {
+    article.querySelectorAll("p").forEach((p) => {
       const text = (p.textContent || "").trim();
-      const ytMatch = text.match(/\{% youtube (https:\/\/[^\s]+|[a-zA-Z0-9_-]+) %\}/);
-
-      if (ytMatch && ytMatch[1]) {
-        foundYoutubeEmbeds = true;
-        const videoId = extractYouTubeId(ytMatch[1]);
-        const container = document.createElement("div");
-        container.className = "youtube-embed-container";
-        container.innerHTML = `
-          <iframe
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/${videoId}"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            loading="lazy"
-            allowfullscreen
-          ></iframe>
-        `;
-        p.replaceWith(container);
-      }
-    });
-
-    // 2) Fallback: process any remaining text nodes that still contain shortcodes
-    const walker = document.createTreeWalker(
-      article,
-      NodeFilter.SHOW_TEXT,
-      null,
-      false,
-    );
-
-    const textNodes = [];
-    let node;
-    while ((node = walker.nextNode())) {
-      textNodes.push(node);
-    }
-
-    textNodes.forEach((textNode) => {
-      let content = textNode.textContent;
-      let hasChanges = false;
-
-      // Process YouTube embeds
-      content = content.replace(youtubeEmbedRegex, (match, videoId) => {
-        foundYoutubeEmbeds = true;
-        hasChanges = true;
-        videoId = extractYouTubeId(videoId);
-
-        return `<div class="youtube-embed-container">
-            <iframe
-              width="560"
-              height="315"
-              src="https://www.youtube.com/embed/${videoId}"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>`;
-      });
-
-      if (hasChanges) {
-        // Replace the text node with HTML content
-        const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = content;
-
-        // Replace the text node with the new HTML elements
-        const parent = textNode.parentNode;
-        while (tempDiv.firstChild) {
-          parent.insertBefore(tempDiv.firstChild, textNode);
-        }
-        parent.removeChild(textNode);
-      }
+      const ytMatch = text.match(/^\{% youtube (https:\/\/[^\s]+|[a-zA-Z0-9_-]+) %\}$/);
+      if (!ytMatch || !ytMatch[1]) return;
+      const container = document.createElement("div");
+      container.className = "youtube-embed-container";
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${extractYouTubeId(ytMatch[1])}`;
+      iframe.title = "YouTube video player";
+      iframe.loading = "lazy";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      container.appendChild(iframe);
+      p.replaceWith(container);
     });
   }
-
-  // Run the embed processing
   processEmbeds();
-  
-  // Also run after astro navigation
-  document.addEventListener("astro:page-load", processEmbeds);
 </script>
 
-<style>
+<style is:global>
   .youtube-embed-container {
     margin: 2rem 0;
     position: relative;
@@ -498,12 +532,12 @@ const wordCount = (post.body ?? "").split(/\s+/).length;
     padding-bottom: 56.25%; /* 16:9 aspect ratio */
     height: 0;
     overflow: hidden;
+    border-radius: 1rem;
   }
 
   .youtube-embed-container iframe {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     border: 0;
