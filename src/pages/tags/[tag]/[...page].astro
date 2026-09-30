@@ -32,7 +32,7 @@ const { page, tagName } = Astro.props;
 const numbers = noteNumbers(getSortedPosts(await getCollection("blog")));
 ---
 
-<Layout title={`Tag: ${tagName} | ${SITE.title}`}>
+<Layout title={`#${tagName} · ${SITE.title}`}>
   <Main
     eyebrow="Field notes · Tag"
     pageTitle={[`#`, `${tagName}`]}

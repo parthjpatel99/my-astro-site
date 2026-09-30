@@ -9,7 +9,7 @@ const peaks = [
 ];
 ---
 
-<Layout title={`Off-route (404) | ${SITE.title}`} description="This page isn't on the map.">
+<Layout title={`Off-route (404) · ${SITE.title}`} description="This page isn't on the map.">
   <main id="main-content" data-theme="dark" class="relative isolate flex min-h-[calc(100svh-4rem)] grow flex-col overflow-hidden bg-background text-foreground sm:min-h-[calc(100svh-72px)]">
     <div class="pointer-events-none absolute inset-y-0 right-0 -z-10 aspect-[1440/900] h-full max-md:-right-[40%]" aria-hidden="true">
       <Topo peaks={peaks} width={1440} height={900} preserveAspectRatio="none" class="absolute inset-0 size-full">

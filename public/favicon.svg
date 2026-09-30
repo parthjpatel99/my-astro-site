@@ -1,15 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <!-- Terminal Block Background (Dark Charcoal) -->
-  <rect x="5" y="5" width="90" height="90" rx="20" fill="#212737" />
-  
-  <!-- "P" Monogram (Accent Orange) -->
-  <g fill="#ff6b01">
-    <!-- Stem -->
-    <rect x="30" y="25" width="12" height="50" rx="2" />
-    <!-- Loop -->
-    <path d="M42 25H58C67.9411 25 76 33.0589 76 43C76 52.9411 67.9411 61 58 61H42V25Z" />
-  </g>
-  
-  <!-- Counter (Hole in P) - Matching Background Color -->
-  <circle cx="58" cy="43" r="6" fill="#212737"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><style>.t{fill:#14110e}.i{fill:#f1e9dc;stroke:#f1e9dc}.d{fill:#ff7a1a}@media (prefers-color-scheme:dark){.t{fill:#f2ebdf}.i{fill:#1c1915;stroke:#1c1915}.d{fill:#c2410c}}</style><rect class="t" width="64" height="64" rx="14"/><path d="M237 0L34 0Q19 0 19-11Q19-20 32-23L55-27Q76-31 82.5-38Q89-45 89-66L89-654Q89-675 82.5-682Q76-689 55-693L32-697Q19-700 19-709Q19-720 34-720L243-720Q302-720 347-694.5Q392-669 417-624Q442-579 442-520Q442-463 417-419Q392-375 348-350.5Q304-326 246-326L174-326Q160-326 160-312L160-70Q160-49 168-41.5Q176-34 204-29L241-23Q252-21 252-12Q252 0 237 0M160-655L160-406Q160-351 227-351Q292-351 329.5-397Q367-443 367-523Q367-605 329-650Q291-695 221-695Q160-695 160-655" class="i"  stroke-width="21.6" stroke-linejoin="round" transform="translate(13.69 52) scale(0.05556)"/><circle cx="44.85" cy="47.6" r="4.4" class="d"/></svg>
