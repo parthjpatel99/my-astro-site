@@ -11,7 +11,7 @@ const posts = await getCollection("blog");
 const tags = getUniqueTags(posts).map((t) => ({ ...t, count: getPostsByTag(posts, t.tag).length }));
 ---
 
-<Layout title={`Tags | ${SITE.title}`}>
+<Layout title={`Tags · ${SITE.title}`}>
   <Main eyebrow="Field notes · Tags" pageTitle="Every trail marker." pageDesc="All the tags used across the field notes.">
     <ul class="flex flex-wrap gap-3">
       {

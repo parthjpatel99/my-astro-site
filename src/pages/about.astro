@@ -7,7 +7,7 @@ import { SITE } from "@/config";
 import { LOCATION, ROUTE, SUMMARY } from "@/data/profile";
 import Layout from "@/layouts/Layout.astro";
 
-const title = `About ${SITE.author}`;
+const title = `About · ${SITE.title}`;
 const description = SUMMARY;
 // Newest first on this page
 const stops = [...ROUTE].reverse();

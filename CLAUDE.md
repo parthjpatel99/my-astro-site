@@ -31,7 +31,7 @@ Key frontmatter fields: `title`, `pubDatetime`, `description`, `tags`, `featured
 
 ### Configuration
 
-- `src/consts.ts` — Primary site config (`SITE` object: metadata, pagination, feature flags)
+- `src/consts.ts` — Primary site config (`SITE` object: metadata, pagination, feature flags). `SITE.title` ("Parth Patel") is the display name for tabs/feeds; `SITE.author` keeps the full name for author metadata, JSON-LD `alternateName` and the copyright line. Page titles use `Page · Parth Patel`.
 - `src/constants.ts` — Social links (`SOCIALS`) and share links (`SHARE_LINKS`) with `active` toggles
 - `src/config.ts` — Re-exports from both for backward compatibility
 
@@ -80,6 +80,8 @@ When `SITE.dynamicOgImage` is true, per-post OG images are generated at build ti
 - `src/utils/remarkLazyLoadImages.mjs` — custom plugin adding `loading="lazy"` to images
 
 ### Scripts
+
+`scripts/generate-favicons.mjs` — regenerates `public/favicon.svg` (adaptive: night tile on light browsers, sand tile on dark), `favicon.ico` (16/32/48) and `apple-touch-icon.png` from the Instrument Serif "P" outline embedded in the script. Run `node scripts/generate-favicons.mjs` after changing palette colours.
 
 `scripts/poltergeist.js` — experimental AI-powered build fixer that catches build errors, queries Claude/GPT-4o for fixes, and auto-retries (max 5 attempts). Requires `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`.
 
