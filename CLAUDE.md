@@ -81,7 +81,7 @@ When `SITE.dynamicOgImage` is true, per-post OG images are generated at build ti
 
 ### Scripts
 
-`scripts/generate-favicons.mjs` — regenerates `public/favicon.svg` (adaptive: night tile on light browsers, sand tile on dark), `favicon.ico` (16/32/48) and `apple-touch-icon.png` from the Instrument Serif "P" outline embedded in the script. Run `node scripts/generate-favicons.mjs` after changing palette colours.
+`scripts/generate-favicons.mjs` — regenerates `public/favicon.svg` (adaptive: night tile on light browsers, sand tile on dark), `favicon.ico` (16/32/48) and `apple-touch-icon.png` from the Instrument Serif "P" outline embedded in the script. Run `node scripts/generate-favicons.mjs` after changing palette colours, then bump the `?v=` on the icon links in `Layout.astro` (browsers cache favicons by URL). A small inline script in `Layout.astro` swaps the SVG icon URL per colour scheme (`&scheme=light|dark`) so open tabs redraw when the theme changes — browsers otherwise only pick the variant at page load.
 
 `scripts/poltergeist.js` — experimental AI-powered build fixer that catches build errors, queries Claude/GPT-4o for fixes, and auto-retries (max 5 attempts). Requires `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`.
 
