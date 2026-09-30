@@ -14,7 +14,7 @@ Search indexing only works after a full build — `npm run dev` won't have searc
 
 ## Architecture
 
-Astro 5 static site with Tailwind CSS v4, TypeScript, MDX content, and React islands.
+Astro 7 static site with Tailwind CSS v4, TypeScript and MDX content (no UI framework islands).
 
 ### Content System
 
@@ -46,7 +46,7 @@ Tailwind v4 via `@tailwindcss/vite` plugin (not PostCSS). Tokens are CSS custom 
 - Utilities: `wrap` (page gutter + 1440px max width), `eyebrow` (mono uppercase label)
 - Theme toggle in `public/toggle-theme.js` persists to localStorage with 24h expiration, then falls back to system preference
 
-Fonts (Google Fonts, linked in `Layout.astro`): Instrument Serif (`font-display`), IBM Plex Sans (`font-sans`, body), IBM Plex Mono (`font-mono`).
+Fonts are self-hosted with the Astro Fonts API (`fonts` in `astro.config.mjs`, `<Font />` in `Layout.astro`): Instrument Serif (`font-display`), IBM Plex Sans (`font-sans`, body), IBM Plex Mono (`font-mono`). Family names are hashed at build time, so never hard-code them (e.g. in SVG `font-family`); use the `font-*` classes or variables.
 
 Prose overrides in `src/styles/typography.css` are intentionally **unlayered** so they beat the typography plugin (numbered serif h2s, drop cap, blockquotes as pull quotes).
 
@@ -65,9 +65,10 @@ When `SITE.dynamicOgImage` is true, per-post OG images are generated at build ti
 
 ### Key Integrations
 
+- **Service worker**: none. `public/sw.js` is a kill switch that unregisters any worker left from the old PWA setup; delete it after a few months.
+
 - **Search**: Pagefind — indexed at build time, client UI initialized via `requestIdleCallback`
 - **RSS**: `/rss.xml` endpoint in `src/pages/rss.xml.ts`
-- **PWA**: `@vite-pwa/astro` with CacheFirst strategies for fonts (1yr) and images (30d)
 - **Analytics**: Vercel Analytics + Speed Insights mounted in `src/layouts/Layout.astro`
 - **Sitemap**: Priority-based config in `astro.config.mjs` (homepage=1.0, recent posts=0.8, tags=0.1)
 - **Structured Data**: JSON-LD schemas (BlogPosting, Person, WebSite) auto-generated per page
