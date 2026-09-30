@@ -9,8 +9,15 @@ function svgBufferToPngBuffer(svg: string) {
   return pngData.asPng();
 }
 
-export async function generateOgImageForPost(post: CollectionEntry<"blog">) {
-  const svg = await postOgImage(post);
+export interface PostOgMeta {
+  /** Field-note number ("02"); omitted for unlisted posts */
+  number?: string;
+  date: string;
+  minutes: string;
+}
+
+export async function generateOgImageForPost(post: CollectionEntry<"blog">, meta: PostOgMeta) {
+  const svg = await postOgImage(post, meta);
   return svgBufferToPngBuffer(svg);
 }
 

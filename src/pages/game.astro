@@ -1,18 +1,19 @@
 ---
 import PageHeader from "@/components/PageHeader.astro";
 import { GAME_URL } from "@/data/profile";
+import { SITE } from "@/config";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout
-  title="Endless Runner"
-  description="Play my endless runner game — dodge obstacles and chase your high score."
+  title={`Recess: Desert Runner | ${SITE.title}`}
+  description="Desert Runner, an endless runner I built with Excalibur.js — jump the saguaros and chase the world record. Playable with a keyboard or a tap."
 >
   <main id="main-content" class="wrap">
     <PageHeader
-      eyebrow="Recess · An endless runner"
+      eyebrow="Recess · Desert Runner"
       title="Take a break. Outrun the desert."
-      description="Dodge the cacti, chase the high score. Press Space or ↑ to jump — or tap on a phone."
+      description="An endless runner I built from scratch. Jump with Space, ↑ or a tap; pause with P, mute with M."
     >
       <a
         href={GAME_URL}
@@ -35,7 +36,7 @@ import Layout from "../layouts/Layout.astro";
       <iframe
         id="game-iframe"
         src={GAME_URL}
-        title="Endless Runner Game"
+        title="Desert Runner — endless runner game"
         class="game-iframe w-full border-0"
         loading="lazy"
         allow="autoplay; fullscreen"

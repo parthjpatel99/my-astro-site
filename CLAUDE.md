@@ -61,7 +61,7 @@ Prose overrides in `src/styles/typography.css` are intentionally **unlayered** s
 
 ### OG Image Generation
 
-When `SITE.dynamicOgImage` is true, per-post OG images are generated at build time using Satori (JSX→SVG) + Resvg (SVG→PNG). Templates are in `src/utils/og-templates/`. Google Fonts (IBM Plex Mono) are fetched dynamically for rendering.
+When `SITE.dynamicOgImage` is true, per-post OG images are generated at build time using Satori + Resvg (SVG→PNG). Templates are in `src/utils/og-templates/` (`shared.js` holds the palette, contour background and footer pieces; `post.js` / `site.js` are the cards). Fonts (Instrument Serif incl. italic, IBM Plex Mono) are fetched from Google at build time via `src/utils/loadGoogleFont.ts` — every Satori node with more than one child needs `display: flex`.
 
 ### Key Integrations
 
