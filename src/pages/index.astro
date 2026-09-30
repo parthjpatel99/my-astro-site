@@ -76,8 +76,8 @@ const route = "M -20 690 C 200 640, 400 720, 580 590 S 840 400, 1004 404 S 1240 
         </div>
       </div>
 
-      <dl class="border-t border-border bg-muted/85 backdrop-blur-sm">
-        <div class="wrap grid grid-cols-2 gap-x-6 gap-y-5 py-6 lg:h-28 lg:grid-cols-4 lg:items-center lg:gap-8 lg:py-0">
+      <div class="border-t border-border bg-muted/85 backdrop-blur-sm">
+        <dl class="wrap grid grid-cols-2 gap-x-6 gap-y-5 py-6 lg:h-28 lg:grid-cols-4 lg:items-center lg:gap-8 lg:py-0">
           <div class="flex flex-col gap-1.5">
             <dt class="font-mono text-[11px] tracking-[0.12em] text-subtle">LOCAL TIME</dt>
             <dd class="font-mono text-xl lg:text-[22px]"><span data-clock>--:--</span> <span class="text-sm text-subtle">{LOCATION.timezoneLabel}</span></dd>
@@ -102,8 +102,8 @@ const route = "M -20 690 C 200 640, 400 720, 580 590 S 840 400, 1004 404 S 1240 
               </div>
             )
           }
-        </div>
-      </dl>
+        </dl>
+      </div>
     </section>
 
     <!-- ===== The route so far ===== -->
@@ -183,7 +183,7 @@ const route = "M -20 690 C 200 640, 400 720, 580 590 S 840 400, 1004 404 S 1240 
             </a>
           </div>
         </div>
-        <a href="/game" class="group relative block aspect-[600/340] w-full overflow-hidden rounded-[18px] border border-border lg:w-[600px]" aria-label="Play the endless runner">
+        <a href="/game" class="group relative block aspect-[600/340] w-full overflow-hidden rounded-[18px] border border-border lg:w-[600px]">
           <svg viewBox="0 0 600 340" class="size-full" aria-hidden="true" shape-rendering="crispEdges">
             <rect width="600" height="340" fill="#2A211B"></rect>
             <rect y="140" width="600" height="60" fill="#3A2A20"></rect>
@@ -208,11 +208,11 @@ const route = "M -20 690 C 200 640, 400 720, 580 590 S 840 400, 1004 404 S 1240 
             <rect x="84" y="244" width="22" height="4" fill="#C98A5A" opacity=".6"></rect>
             <rect x="60" y="250" width="14" height="4" fill="#C98A5A" opacity=".4"></rect>
           </svg>
-          <span class="absolute top-5 right-6 left-6 flex justify-between font-mono text-sm tracking-[0.1em] text-[#F1E9DC]">
+          <span class="absolute top-5 right-6 left-6 flex justify-between font-mono text-sm tracking-[0.1em] text-[#F1E9DC]" aria-hidden="true">
             <span>HI 000000</span><span>000000</span>
           </span>
           <span class="absolute right-0 bottom-6 left-0 text-center font-mono text-[13px] tracking-[0.14em] text-[#1A1714]">
-            <span class="blink">▶</span> CLICK TO PLAY
+            <span class="blink" aria-hidden="true">▶</span> CLICK TO PLAY<span class="sr-only"> the endless runner</span>
           </span>
         </a>
       </div>
