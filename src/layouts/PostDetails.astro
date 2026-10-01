@@ -129,7 +129,7 @@ const profile = elevationProfile(post.id);
       <path d={profile} fill="var(--accent)" opacity="0.85"></path>
     </svg>
     <div class="elevation-marker absolute inset-y-0 w-px bg-foreground"></div>
-    <span data-elev-label class="elevation-label absolute top-1.5 bg-muted px-1.5 py-0.5 font-mono text-[10px] tracking-[0.1em] whitespace-nowrap sm:text-[11px]">
+    <span data-elev-label class="elevation-label absolute top-1.5 bg-muted px-1.5 py-0.5 font-mono text-[11px] tracking-[0.1em] whitespace-nowrap">
       0% CLIMBED · ~{minutes} MIN LEFT
     </span>
     {
@@ -142,16 +142,16 @@ const profile = elevationProfile(post.id);
   </div>
 
   <main id="main-content" class="wrap pt-12 sm:pt-20" data-pagefind-body>
-    <div class="grid gap-y-10 lg:grid-cols-[180px_minmax(0,680px)_minmax(0,1fr)] lg:gap-x-12 lg:gap-y-14 xl:grid-cols-[220px_680px_260px] xl:gap-x-[60px]">
+    <div class="grid gap-y-10 lg:grid-cols-[180px_minmax(0,680px)] lg:gap-x-12 lg:gap-y-14 xl:grid-cols-[180px_minmax(0,680px)_minmax(200px,240px)] min-[90rem]:grid-cols-[220px_minmax(0,680px)_260px] min-[90rem]:gap-x-[60px]">
       <div class="hidden flex-col gap-2 lg:flex" data-pagefind-ignore>
         <span class="eyebrow text-xs text-subtle">Field note</span>
         {number && <span class="font-display text-[140px] leading-[0.8] text-accent">{number}</span>}
       </div>
 
-      <header class="flex flex-col gap-6 lg:col-span-2">
+      <header class="flex flex-col gap-6 xl:col-span-2">
         <nav aria-label="Breadcrumb" class="flex flex-wrap gap-2.5 font-mono text-[13px] tracking-[0.06em] text-subtle" data-pagefind-ignore>
-          <a href="/" class="hover:text-accent">Home</a><span aria-hidden="true">/</span>
-          <a href="/posts" class="hover:text-accent">Field notes</a><span aria-hidden="true">/</span>
+          <a href="/" class="-my-2 py-2 hover:text-accent">Home</a><span aria-hidden="true">/</span>
+          <a href="/posts" class="-my-2 py-2 hover:text-accent">Field notes</a><span aria-hidden="true">/</span>
           <span class="text-foreground" aria-current="page">{number ? `No. ${number}` : "Unlisted"}</span>
         </nav>
         <h1
@@ -190,7 +190,7 @@ const profile = elevationProfile(post.id);
 
       {
         heroImage && (
-          <figure class="lg:col-span-2 lg:col-start-2">
+          <figure class="lg:col-start-2 xl:col-[2/4]">
             <div class="duotone aspect-[16/9] overflow-hidden rounded-[20px] sm:aspect-[1000/460]">
               <img src={heroImage} alt="" class="size-full object-cover" fetchpriority="high" />
             </div>
@@ -229,6 +229,14 @@ const profile = elevationProfile(post.id);
       </aside>
 
       <div class="min-w-0">
+        {
+          tldr && (
+            <div data-theme="dark" class="mb-10 flex flex-col gap-2.5 rounded-2xl border border-border bg-surface p-5 text-foreground xl:hidden" data-pagefind-ignore>
+              <span class="font-mono text-[11px] tracking-[0.12em] text-accent">THE SHORT VERSION</span>
+              <span class="font-display text-2xl leading-[1.2]">{tldr}</span>
+            </div>
+          )
+        }
         <article id="article" class="prose">
           <Content />
         </article>
@@ -293,11 +301,11 @@ const profile = elevationProfile(post.id);
         </nav>
       </div>
 
-      <aside class="hidden lg:block" data-pagefind-ignore>
+      <aside class="hidden xl:block" data-pagefind-ignore>
         <div class="sticky top-[150px] flex flex-col gap-7">
           {
             tldr && (
-              <div data-theme="dark" class="flex flex-col gap-2.5 rounded-2xl bg-background p-5 text-foreground">
+              <div data-theme="dark" class="flex flex-col gap-2.5 rounded-2xl border border-border bg-surface p-5 text-foreground">
                 <span class="font-mono text-[11px] tracking-[0.12em] text-accent">THE SHORT VERSION</span>
                 <span class="font-display text-2xl leading-[1.2]">{tldr}</span>
               </div>

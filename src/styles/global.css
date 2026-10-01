@@ -199,6 +199,15 @@
   mix-blend-mode: multiply;
 }
 
+/* Hero map below lg: the copy spans the full width there, so the map stays
+   faint behind it and comes up to full strength toward the telemetry strip
+   (the "you are here" marker is hidden there; it would sit under the copy) */
+@media (width < 64rem) {
+  .hero-map {
+    mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.3) 55%, #000 80%);
+  }
+}
+
 /* Mobile nav slide transition */
 /* Always clipped: otherwise the links spill over the page while the height animates */
 #menu-items {
